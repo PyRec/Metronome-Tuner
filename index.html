@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>ChromaPulse</title>
+  <title>Hear the Beat</title>
 
   <!-- PWA & Standalone App Settings -->
   <link rel="manifest" href="manifest.json">
@@ -39,9 +39,10 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
+      position: relative;
     }
 
-    /* Top Brand Bar */
+    /* Brand Header */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -52,24 +53,25 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
-      letter-spacing: 1.8px;
+      letter-spacing: 1.5px;
       color: #ffffff;
       text-transform: uppercase;
     }
     .brand-badge {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       border-radius: 8px;
       background: #00d294;
       color: #070a10;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 900;
-      letter-spacing: 0;
+      letter-spacing: 0.5px;
+      box-shadow: 0 0 12px rgba(0, 210, 148, 0.4);
     }
     .top-actions {
       display: flex;
@@ -80,8 +82,8 @@
       background: #0e1522;
       border: 1px solid #1b263b;
       color: #798ba3;
-      padding: 6px 12px;
-      border-radius: 18px;
+      padding: 6px 14px;
+      border-radius: 20px;
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
@@ -97,7 +99,7 @@
       box-shadow: 0 0 10px rgba(0, 210, 148, 0.35);
     }
 
-    /* ChromaPulse Studio Cards */
+    /* Studio Card Panels */
     .card {
       background: #0c121d;
       border: 1px solid #172233;
@@ -119,10 +121,8 @@
       text-transform: uppercase;
     }
 
-    /* Interactive Tempo Style Dropdown */
-    .tempo-pill-select {
-      appearance: none;
-      -webkit-appearance: none;
+    /* Playing Style Trigger Pill */
+    .style-pill {
       background: #09261d;
       border: 1px solid #00d294;
       color: #00d294;
@@ -133,12 +133,16 @@
       letter-spacing: 1.2px;
       text-transform: uppercase;
       cursor: pointer;
-      outline: none;
-      text-align-last: center;
       box-shadow: 0 0 10px rgba(0, 210, 148, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .style-pill:active {
+      background: #0f3d30;
     }
 
-    /* T1 Tuner Section */
+    /* T1 Chromatic Tuner */
     .tune-btn {
       background: #101928;
       border: 1px solid #1c2b42;
@@ -236,7 +240,7 @@
       font-weight: 700;
     }
 
-    /* Recessed Pendulum Visualizer */
+    /* Mechanical Pendulum Visualizer */
     .pendulum-box {
       width: 100%;
       height: 100px;
@@ -254,7 +258,7 @@
       display: block;
     }
 
-    /* BPM & Quick Step Controls */
+    /* BPM Quick Steps */
     .bpm-control-row {
       display: flex;
       align-items: center;
@@ -346,18 +350,18 @@
       transform: scale(1.1);
     }
 
-    /* Action Buttons: TAP TEMPO & START */
+    /* Action Row: Time Signature Box (Replaced Tap Tempo) + START */
     .action-row {
       display: grid;
-      grid-template-columns: 1fr 1.35fr;
+      grid-template-columns: 1.15fr 1.35fr;
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
-    .btn-tap {
+    .btn-action-box {
       background: #101826;
       border: 1px solid #1c293d;
       border-radius: 12px;
-      padding: 12px 10px;
+      padding: 11px 12px;
       color: #cbd5e1;
       display: flex;
       flex-direction: column;
@@ -367,18 +371,22 @@
       cursor: pointer;
       transition: background 0.1s ease;
     }
-    .btn-tap:active { background: #182438; }
-    .btn-tap-sub {
+    .btn-action-box:active { background: #182438; }
+    .box-sub {
       font-size: 9px;
       font-weight: 800;
       letter-spacing: 1.5px;
       color: #64748b;
+      text-transform: uppercase;
     }
-    .btn-tap-main {
+    .box-main {
       font-size: 15px;
       font-weight: 900;
       letter-spacing: 1px;
       color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .btn-start {
@@ -403,37 +411,36 @@
       box-shadow: 0 8px 24px rgba(239, 68, 68, 0.45);
     }
 
-    /* Dropdown Settings Rows */
-    .settings-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 4px;
-    }
-    .setting-group {
+    /* Sound Preset Bar Button */
+    .sound-select-box {
+      width: 100%;
+      background: #101826;
+      border: 1px solid #1c293d;
+      border-radius: 10px;
+      padding: 10px 14px;
       display: flex;
-      flex-direction: column;
-      gap: 5px;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: background 0.1s ease;
     }
-    .setting-label {
-      font-size: 10px;
+    .sound-select-box:active { background: #162234; }
+    .sound-label {
+      font-size: 11px;
       font-weight: 800;
-      color: #556987;
+      color: #64748b;
       letter-spacing: 1px;
       text-transform: uppercase;
     }
-    .select-input {
-      background: #101826;
-      border: 1px solid #1c293d;
-      color: #cbd5e1;
-      padding: 9px 10px;
-      border-radius: 8px;
+    .sound-val {
       font-size: 12px;
-      font-weight: 700;
-      outline: none;
+      font-weight: 800;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* Footer Tagline */
     .footer-note {
       text-align: center;
       font-size: 11px;
@@ -442,23 +449,108 @@
       letter-spacing: 1px;
       margin-top: 2px;
     }
+
+    /* Custom In-App Obsidian Dropdown Menu Sheet */
+    .menu-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4, 7, 12, 0.75);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .menu-sheet {
+      width: 100%;
+      max-width: 360px;
+      background: #0d1522;
+      border: 1px solid #1c2d44;
+      border-radius: 18px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+      padding: 16px;
+      animation: popIn 0.15s ease-out;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #182538;
+      margin-bottom: 8px;
+    }
+    .menu-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #798ba3;
+      text-transform: uppercase;
+    }
+    .menu-close-btn {
+      background: #141e2e;
+      border: none;
+      color: #94a3b8;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .menu-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    .menu-item {
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #cbd5e1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.1s ease;
+    }
+    .menu-item:hover, .menu-item:active {
+      background: #142033;
+      color: #00d294;
+    }
+    .menu-item.selected {
+      background: #092b21;
+      border: 1px solid #00d294;
+      color: #00d294;
+    }
   </style>
 </head>
 <body>
   <div class="app-frame">
 
-    <!-- Brand Header Bar -->
+    <!-- Brand Header -->
     <div class="top-bar">
       <div class="brand-logo">
-        <div class="brand-badge">CP</div>
-        ChromaPulse
+        <div class="brand-badge">HTB</div>
+        Hear the Beat
       </div>
       <div class="top-actions">
         <button id="wakeToggle" class="top-pill">Keep-Awake</button>
       </div>
     </div>
 
-    <!-- T1 Chromatic Tuner Card -->
+    <!-- T1 Chromatic Tuner -->
     <div class="card">
       <div class="card-header">
         <span class="card-title">T1 Chromatic Tuner</span>
@@ -486,31 +578,22 @@
       </div>
     </div>
 
-    <!-- Precision Metronome Card -->
+    <!-- Precision Metronome -->
     <div class="card">
       <div class="card-header">
         <span class="card-title">Precision Metronome</span>
-        <!-- Clickable Tempo Style Selector -->
-        <select id="tempoSelect" class="tempo-pill-select" onchange="applyTempoStyle()">
-          <option value="40">Grave (40)</option>
-          <option value="50">Largo (50)</option>
-          <option value="60">Larghetto (60)</option>
-          <option value="72">Adagio (72)</option>
-          <option value="92">Andante (92)</option>
-          <option value="112">Moderato (112)</option>
-          <option value="132" selected>Allegro (132)</option>
-          <option value="160">Vivace (160)</option>
-          <option value="184">Presto (184)</option>
-          <option value="210">Prestissimo (210)</option>
-        </select>
+        <button id="stylePillBtn" class="style-pill" onclick="openMenu('style')">
+          <span id="stylePillLabel">Allegro (132)</span>
+          <span style="font-size: 9px;">▼</span>
+        </button>
       </div>
 
-      <!-- Pendulum Animation Chamber -->
+      <!-- Pendulum Animation Canvas -->
       <div class="pendulum-box">
         <canvas id="pendulumCanvas" width="400" height="100"></canvas>
       </div>
 
-      <!-- Quick Step + BPM Center -->
+      <!-- Quick Steps + BPM Display -->
       <div class="bpm-control-row">
         <div class="step-pair">
           <button class="btn-step" onclick="changeBpm(-5)">-5</button>
@@ -538,48 +621,48 @@
         <div class="beat-circle">4</div>
       </div>
 
-      <!-- Action Row: TAP & START -->
+      <!-- Action Row: Time Signature Box + START Button -->
       <div class="action-row">
-        <button id="tapBtn" class="btn-tap">
-          <span class="btn-tap-sub">TAP TEMPO</span>
-          <span class="btn-tap-main">TAP</span>
-        </button>
+        <div id="timeSigBtn" class="btn-action-box" onclick="openMenu('time')">
+          <span class="box-sub">Time Signature</span>
+          <span id="timeSigDisplay" class="box-main">
+            4/4
+            <span style="font-size: 10px; color: #00d294;">▼</span>
+          </span>
+        </div>
 
         <button id="startBtn" class="btn-start">
           ▶ START
         </button>
       </div>
 
-      <!-- Settings Selectors -->
-      <div class="settings-grid">
-        <div class="setting-group">
-          <span class="setting-label">Sound Preset</span>
-          <select id="soundSelect" class="select-input">
-            <option value="woodblock">Resonant Woodblock</option>
-            <option value="mechanical">Mechanical Click</option>
-            <option value="beep">Digital Synth Beep</option>
-          </select>
-        </div>
-
-        <div class="setting-group">
-          <span class="setting-label">Time Signature</span>
-          <select id="timeSignature" class="select-input" onchange="updateTimeSig()">
-            <option value="4" selected>4/4 Standard</option>
-            <option value="3">3/4 Waltz</option>
-            <option value="2">2/4 March</option>
-            <option value="5">5/4 Modern</option>
-            <option value="6">6/8 Compound</option>
-          </select>
-        </div>
+      <!-- Sound Preset Selector Row -->
+      <div class="sound-select-box" onclick="openMenu('sound')">
+        <span class="sound-label">Sound Preset</span>
+        <span id="soundDisplay" class="sound-val">
+          Resonant Woodblock
+          <span style="font-size: 10px; color: #00d294;">▼</span>
+        </span>
       </div>
     </div>
 
-    <div class="footer-note">ChromaPulse • Studio Metronome & Tuner</div>
+    <div class="footer-note">Hear the Beat • Studio Metronome & Tuner</div>
 
   </div>
 
+  <!-- Custom In-App Dropdown Modal -->
+  <div id="menuBackdrop" class="menu-backdrop" onclick="closeMenu(event)">
+    <div class="menu-sheet" onclick="event.stopPropagation()">
+      <div class="menu-header">
+        <span id="menuTitle" class="menu-title">Select Option</span>
+        <button class="menu-close-btn" onclick="closeMenu()">✕</button>
+      </div>
+      <div id="menuOptionsList" class="menu-options-list"></div>
+    </div>
+  </div>
+
   <script>
-    // Register Service Worker
+    // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(() => {});
     }
@@ -587,28 +670,23 @@
     // Audio Context Setup
     let audioCtx = null;
     function getContext() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
       return audioCtx;
     }
 
-    // Silent background audio anchor (keeps web audio alive)
+    // Silent audio anchor for background running
     const silentLoop = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA");
     silentLoop.loop = true;
 
-    // Fixed Screen Keep-Awake Engine
+    // Screen Keep-Awake Engine
     let wakeLock = null;
     const wakeToggle = document.getElementById('wakeToggle');
-
     async function requestWakeLock() {
       try {
         wakeLock = await navigator.wakeLock.request('screen');
         wakeToggle.classList.add('active');
-        wakeToggle.textContent = 'Keep-Awake';
+        wakeToggle.textContent = 'Locked On';
         wakeLock.addEventListener('release', () => {
           wakeLock = null;
           wakeToggle.classList.remove('active');
@@ -620,34 +698,131 @@
         wakeToggle.textContent = 'Keep-Awake';
       }
     }
-
     wakeToggle.addEventListener('click', async () => {
       if (!('wakeLock' in navigator)) {
-        alert('Wake Lock is not supported in this browser.');
+        alert('Wake Lock is not supported on this browser.');
         return;
       }
-      if (!wakeLock) {
-        await requestWakeLock();
-      } else {
-        await wakeLock.release();
-        wakeLock = null;
-      }
+      if (!wakeLock) await requestWakeLock();
+      else { await wakeLock.release(); wakeLock = null; }
     });
-
     document.addEventListener('visibilitychange', async () => {
       if (wakeLock !== null && document.visibilityState === 'visible') {
         await requestWakeLock();
       }
     });
 
-    // Timing Engine
+    // App State
     let isRunning = false;
     let bpm = 132;
     let beat = 0;
     let beatsPerBar = 4;
+    let currentSound = 'woodblock';
     let nextNoteTime = 0.0;
     let timerId = null;
 
+    // Menu Definitions
+    const styleOptions = [
+      { label: 'Grave (40)', bpm: 40 },
+      { label: 'Largo (50)', bpm: 50 },
+      { label: 'Larghetto (60)', bpm: 60 },
+      { label: 'Adagio (72)', bpm: 72 },
+      { label: 'Andante (92)', bpm: 92 },
+      { label: 'Moderato (112)', bpm: 112 },
+      { label: 'Allegro (132)', bpm: 132 },
+      { label: 'Vivace (160)', bpm: 160 },
+      { label: 'Presto (184)', bpm: 184 },
+      { label: 'Prestissimo (210)', bpm: 210 }
+    ];
+
+    const timeOptions = [
+      { label: '2/4 March', val: 2, display: '2/4' },
+      { label: '3/4 Waltz', val: 3, display: '3/4' },
+      { label: '4/4 Standard', val: 4, display: '4/4' },
+      { label: '5/4 Modern', val: 5, display: '5/4' },
+      { label: '6/8 Compound', val: 6, display: '6/8' }
+    ];
+
+    const soundOptions = [
+      { label: 'Resonant Woodblock', val: 'woodblock' },
+      { label: 'Mechanical Click', val: 'mechanical' },
+      { label: 'Digital Synth Beep', val: 'beep' }
+    ];
+
+    // Custom In-App Dropdown Controller
+    let currentMenuType = null;
+    function openMenu(type) {
+      currentMenuType = type;
+      const backdrop = document.getElementById('menuBackdrop');
+      const title = document.getElementById('menuTitle');
+      const list = document.getElementById('menuOptionsList');
+      list.innerHTML = '';
+
+      if (type === 'style') {
+        title.textContent = 'Tempo Style';
+        styleOptions.forEach(opt => {
+          const item = document.createElement('div');
+          const isSel = Math.abs(bpm - opt.bpm) < 6;
+          item.className = 'menu-item' + (isSel ? ' selected' : '');
+          item.innerHTML = `<span>${opt.label}</span>${isSel ? '<span>✓</span>' : ''}`;
+          item.onclick = () => {
+            setBpm(opt.bpm);
+            closeMenu();
+          };
+          list.appendChild(item);
+        });
+      } else if (type === 'time') {
+        title.textContent = 'Time Signature';
+        timeOptions.forEach(opt => {
+          const item = document.createElement('div');
+          const isSel = beatsPerBar === opt.val;
+          item.className = 'menu-item' + (isSel ? ' selected' : '');
+          item.innerHTML = `<span>${opt.label}</span>${isSel ? '<span>✓</span>' : ''}`;
+          item.onclick = () => {
+            setTimeSig(opt.val, opt.display);
+            closeMenu();
+          };
+          list.appendChild(item);
+        });
+      } else if (type === 'sound') {
+        title.textContent = 'Sound Preset';
+        soundOptions.forEach(opt => {
+          const item = document.createElement('div');
+          const isSel = currentSound === opt.val;
+          item.className = 'menu-item' + (isSel ? ' selected' : '');
+          item.innerHTML = `<span>${opt.label}</span>${isSel ? '<span>✓</span>' : ''}`;
+          item.onclick = () => {
+            currentSound = opt.val;
+            document.getElementById('soundDisplay').innerHTML = `${opt.label} <span style="font-size: 10px; color: #00d294;">▼</span>`;
+            closeMenu();
+          };
+          list.appendChild(item);
+        });
+      }
+
+      backdrop.style.display = 'flex';
+    }
+
+    function closeMenu() {
+      document.getElementById('menuBackdrop').style.display = 'none';
+      currentMenuType = null;
+    }
+
+    // Time Signature Logic
+    function setTimeSig(val, display) {
+      beatsPerBar = val;
+      document.getElementById('timeSigDisplay').innerHTML = `${display} <span style="font-size: 10px; color: #00d294;">▼</span>`;
+      const container = document.getElementById('beatContainer');
+      container.innerHTML = '';
+      for (let i = 1; i <= beatsPerBar; i++) {
+        const circle = document.createElement('div');
+        circle.className = 'beat-circle';
+        circle.textContent = i;
+        container.appendChild(circle);
+      }
+    }
+
+    // Scheduler and Click Sounds
     function scheduler() {
       const ctx = getContext();
       while (nextNoteTime < ctx.currentTime + 0.1) {
@@ -660,19 +835,18 @@
 
     function playClickSound(time, isAccent) {
       const ctx = getContext();
-      const soundType = document.getElementById('soundSelect').value;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.connect(gain);
       gain.connect(ctx.destination);
 
-      if (soundType === 'beep') {
+      if (currentSound === 'beep') {
         osc.frequency.setValueAtTime(isAccent ? 1760 : 880, time);
         gain.gain.setValueAtTime(0.7, time);
         gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
         osc.start(time);
         osc.stop(time + 0.06);
-      } else if (soundType === 'mechanical') {
+      } else if (currentSound === 'mechanical') {
         osc.frequency.setValueAtTime(isAccent ? 1300 : 750, time);
         osc.frequency.exponentialRampToValueAtTime(80, time + 0.02);
         gain.gain.setValueAtTime(0.9, time);
@@ -761,19 +935,6 @@
     }
     renderLoop();
 
-    // Time Signature & Numbered Circles: 1 2 3 4
-    function updateTimeSig() {
-      beatsPerBar = parseInt(document.getElementById('timeSignature').value);
-      const container = document.getElementById('beatContainer');
-      container.innerHTML = '';
-      for (let i = 1; i <= beatsPerBar; i++) {
-        const circle = document.createElement('div');
-        circle.className = 'beat-circle';
-        circle.textContent = i;
-        container.appendChild(circle);
-      }
-    }
-
     function triggerBeatVisual(index, noteTime) {
       const ctx = getContext();
       const delay = Math.max(0, (noteTime - ctx.currentTime) * 1000);
@@ -785,7 +946,7 @@
       }, delay);
     }
 
-    // Start / Stop Toggle
+    // Start / Stop Controller
     const startBtn = document.getElementById('startBtn');
     startBtn.onclick = () => {
       const ctx = getContext();
@@ -807,56 +968,34 @@
       }
     };
 
-    // Tempo Management
+    // BPM & Style Pill Updating
     const bpmVal = document.getElementById('bpmVal');
     const bpmSlider = document.getElementById('bpmSlider');
-    const tempoSelect = document.getElementById('tempoSelect');
+    const stylePillLabel = document.getElementById('stylePillLabel');
 
-    function updateTempoPillFromBpm(b) {
-      const options = Array.from(tempoSelect.options);
-      let closest = options[0];
+    function updateStyleLabel(b) {
+      let closest = styleOptions[0];
       let minDiff = 999;
-      options.forEach(opt => {
-        const diff = Math.abs(parseInt(opt.value) - b);
+      styleOptions.forEach(opt => {
+        const diff = Math.abs(opt.bpm - b);
         if (diff < minDiff) {
           minDiff = diff;
           closest = opt;
         }
       });
-      tempoSelect.value = closest.value;
+      stylePillLabel.textContent = closest.label;
     }
 
     function setBpm(val) {
       bpm = Math.min(250, Math.max(30, val));
       bpmVal.textContent = bpm;
       bpmSlider.value = bpm;
-      updateTempoPillFromBpm(bpm);
+      updateStyleLabel(bpm);
     }
-
     function changeBpm(delta) { setBpm(bpm + delta); }
     bpmSlider.oninput = (e) => setBpm(parseInt(e.target.value));
 
-    function applyTempoStyle() {
-      setBpm(parseInt(tempoSelect.value));
-    }
-
-    // Tap Tempo
-    let tapTimes = [];
-    document.getElementById('tapBtn').onclick = () => {
-      const now = performance.now();
-      tapTimes.push(now);
-      if (tapTimes.length > 4) tapTimes.shift();
-      if (tapTimes.length >= 2) {
-        const intervals = [];
-        for (let i = 1; i < tapTimes.length; i++) intervals.push(tapTimes[i] - tapTimes[i - 1]);
-        const avg = intervals.reduce((a, b) => a + b) / intervals.length;
-        if (avg < 2000 && avg > 200) setBpm(Math.round(60000 / avg));
-      }
-      clearTimeout(window.tapReset);
-      window.tapReset = setTimeout(() => { tapTimes = []; }, 2200);
-    };
-
-    // Robust Fixed Tuner Engine
+    // T1 Chromatic Tuner Engine
     let micStream = null;
     let analyser = null;
     let tunerActive = false;
@@ -917,9 +1056,7 @@
       const s = buf.slice(r1, r2);
       const c = new Array(s.length).fill(0);
       for (let i = 0; i < s.length; i++) {
-        for (let j = 0; j < s.length - i; j++) {
-          c[i] += s[j] * s[j + i];
-        }
+        for (let j = 0; j < s.length - i; j++) c[i] += s[j] * s[j + i];
       }
 
       let d = 0;
@@ -971,3 +1108,5 @@
       requestAnimationFrame(runTuner);
     }
   </script>
+</body>
+</html>
