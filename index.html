@@ -579,7 +579,7 @@
   </div>
 
   <script>
-    // PWA Service Worker Registration
+    // Register Service Worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(() => {});
     }
@@ -587,43 +587,60 @@
     // Audio Context Setup
     let audioCtx = null;
     function getContext() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
       return audioCtx;
     }
 
-    // Background Audio Anchor
+    // Silent background audio anchor (keeps web audio alive)
     const silentLoop = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA");
     silentLoop.loop = true;
 
-    // Screen Keep-Awake Lock
+    // Fixed Screen Keep-Awake Engine
     let wakeLock = null;
     const wakeToggle = document.getElementById('wakeToggle');
+
+    async function requestWakeLock() {
+      try {
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeToggle.classList.add('active');
+        wakeToggle.textContent = 'Locked On';
+        wakeLock.addEventListener('release', () => {
+          wakeLock = null;
+          wakeToggle.classList.remove('active');
+          wakeToggle.textContent = 'Keep-Awake';
+        });
+      } catch (err) {
+        wakeLock = null;
+        wakeToggle.classList.remove('active');
+        wakeToggle.textContent = 'Keep-Awake';
+      }
+    }
+
     wakeToggle.addEventListener('click', async () => {
       if (!('wakeLock' in navigator)) {
-        alert('Wake Lock is not supported on this browser.');
+        alert('Wake Lock is not supported in this browser.');
         return;
       }
-      try {
-        if (!wakeLock) {
-          wakeLock = await navigator.wakeLock.request('screen');
-          wakeToggle.classList.add('active');
-          wakeToggle.textContent = 'Locked On';
-          wakeLock.addEventListener('release', () => {
-            wakeLock = null;
-            wakeToggle.classList.remove('active');
-            wakeToggle.textContent = 'Keep-Awake';
-          });
-        } else {
-          await wakeLock.release();
-          wakeLock = null;
-        }
-      } catch (e) {
-        console.warn(e);
+      if (!wakeLock) {
+        await requestWakeLock();
+      } else {
+        await wakeLock.release();
+        wakeLock = null;
       }
     });
 
-    // Timing Engine & Web Worker Clock
+    document.addEventListener('visibilitychange', async () => {
+      if (wakeLock !== null && document.visibilityState === 'visible') {
+        await requestWakeLock();
+      }
+    });
+
+    // Timing Engine
     let isRunning = false;
     let bpm = 132;
     let beat = 0;
@@ -644,22 +661,18 @@
     function playClickSound(time, isAccent) {
       const ctx = getContext();
       const soundType = document.getElementById('soundSelect').value;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
 
       if (soundType === 'beep') {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
         osc.frequency.setValueAtTime(isAccent ? 1760 : 880, time);
         gain.gain.setValueAtTime(0.7, time);
         gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
         osc.start(time);
         osc.stop(time + 0.06);
       } else if (soundType === 'mechanical') {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
         osc.frequency.setValueAtTime(isAccent ? 1300 : 750, time);
         osc.frequency.exponentialRampToValueAtTime(80, time + 0.02);
         gain.gain.setValueAtTime(0.9, time);
@@ -667,11 +680,6 @@
         osc.start(time);
         osc.stop(time + 0.03);
       } else {
-        // Resonant Woodblock
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
         osc.frequency.setValueAtTime(isAccent ? 1600 : 950, time);
         osc.frequency.exponentialRampToValueAtTime(isAccent ? 800 : 450, time + 0.04);
         gain.gain.setValueAtTime(1.0, time);
@@ -687,19 +695,16 @@
 
     function drawPendulum(angle) {
       pCtx.clearRect(0, 0, canvas.width, canvas.height);
-
       const centerX = canvas.width / 2;
       const pivotY = canvas.height - 10;
       const armLength = canvas.height - 24;
 
-      // Calibration Arc
       pCtx.beginPath();
       pCtx.arc(centerX, pivotY, armLength + 4, -Math.PI / 2 - 0.44, -Math.PI / 2 + 0.44);
       pCtx.strokeStyle = '#172233';
       pCtx.lineWidth = 2;
       pCtx.stroke();
 
-      // Tick marks
       for (let a = -0.42; a <= 0.421; a += 0.07) {
         const isCenter = Math.abs(a) < 0.02;
         const r1 = armLength + 2;
@@ -712,7 +717,6 @@
         pCtx.stroke();
       }
 
-      // Arm
       const tipX = centerX + Math.sin(angle) * armLength;
       const tipY = pivotY - Math.cos(angle) * armLength;
       pCtx.beginPath();
@@ -722,5 +726,248 @@
       pCtx.lineWidth = 3;
       pCtx.stroke();
 
-      // Sliding Weight
-      const normBpm = (bpm - 30) / (250 - 30
+      const normBpm = (bpm - 30) / (250 - 30);
+      const weightDist = armLength * (0.84 - normBpm * 0.48);
+      const wX = centerX + Math.sin(angle) * weightDist;
+      const wY = pivotY - Math.cos(angle) * weightDist;
+
+      pCtx.save();
+      pCtx.translate(wX, wY);
+      pCtx.rotate(angle);
+      pCtx.fillStyle = '#00d294';
+      if (isRunning) {
+        pCtx.shadowColor = '#00d294';
+        pCtx.shadowBlur = 12;
+      }
+      pCtx.fillRect(-8, -6, 16, 12);
+      pCtx.restore();
+
+      pCtx.beginPath();
+      pCtx.arc(centerX, pivotY, 6, 0, Math.PI * 2);
+      pCtx.fillStyle = '#00d294';
+      pCtx.fill();
+    }
+
+    let animStart = 0;
+    function renderLoop() {
+      let currentAngle = 0;
+      if (isRunning) {
+        const beatPeriod = 60.0 / bpm;
+        const elapsed = (performance.now() - animStart) / 1000;
+        currentAngle = Math.sin(elapsed * (Math.PI / beatPeriod)) * 0.42;
+      }
+      drawPendulum(currentAngle);
+      requestAnimationFrame(renderLoop);
+    }
+    renderLoop();
+
+    // Time Signature & Numbered Circles: 1 2 3 4
+    function updateTimeSig() {
+      beatsPerBar = parseInt(document.getElementById('timeSignature').value);
+      const container = document.getElementById('beatContainer');
+      container.innerHTML = '';
+      for (let i = 1; i <= beatsPerBar; i++) {
+        const circle = document.createElement('div');
+        circle.className = 'beat-circle';
+        circle.textContent = i;
+        container.appendChild(circle);
+      }
+    }
+
+    function triggerBeatVisual(index, noteTime) {
+      const ctx = getContext();
+      const delay = Math.max(0, (noteTime - ctx.currentTime) * 1000);
+      const circles = document.querySelectorAll('.beat-circle');
+      setTimeout(() => {
+        circles.forEach((c, i) => {
+          c.className = 'beat-circle' + (i === index ? (i === 0 ? ' accent' : ' active') : '');
+        });
+      }, delay);
+    }
+
+    // Start / Stop Toggle
+    const startBtn = document.getElementById('startBtn');
+    startBtn.onclick = () => {
+      const ctx = getContext();
+      isRunning = !isRunning;
+      if (isRunning) {
+        silentLoop.play().catch(() => {});
+        beat = 0;
+        animStart = performance.now();
+        nextNoteTime = ctx.currentTime + 0.05;
+        timerId = setInterval(scheduler, 25);
+        startBtn.textContent = '■ STOP';
+        startBtn.classList.add('running');
+      } else {
+        silentLoop.pause();
+        clearInterval(timerId);
+        startBtn.textContent = '▶ START';
+        startBtn.classList.remove('running');
+        document.querySelectorAll('.beat-circle').forEach(c => c.className = 'beat-circle');
+      }
+    };
+
+    // Tempo Management
+    const bpmVal = document.getElementById('bpmVal');
+    const bpmSlider = document.getElementById('bpmSlider');
+    const tempoSelect = document.getElementById('tempoSelect');
+
+    function updateTempoPillFromBpm(b) {
+      const options = Array.from(tempoSelect.options);
+      let closest = options[0];
+      let minDiff = 999;
+      options.forEach(opt => {
+        const diff = Math.abs(parseInt(opt.value) - b);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closest = opt;
+        }
+      });
+      tempoSelect.value = closest.value;
+    }
+
+    function setBpm(val) {
+      bpm = Math.min(250, Math.max(30, val));
+      bpmVal.textContent = bpm;
+      bpmSlider.value = bpm;
+      updateTempoPillFromBpm(bpm);
+    }
+
+    function changeBpm(delta) { setBpm(bpm + delta); }
+    bpmSlider.oninput = (e) => setBpm(parseInt(e.target.value));
+
+    function applyTempoStyle() {
+      setBpm(parseInt(tempoSelect.value));
+    }
+
+    // Tap Tempo
+    let tapTimes = [];
+    document.getElementById('tapBtn').onclick = () => {
+      const now = performance.now();
+      tapTimes.push(now);
+      if (tapTimes.length > 4) tapTimes.shift();
+      if (tapTimes.length >= 2) {
+        const intervals = [];
+        for (let i = 1; i < tapTimes.length; i++) intervals.push(tapTimes[i] - tapTimes[i - 1]);
+        const avg = intervals.reduce((a, b) => a + b) / intervals.length;
+        if (avg < 2000 && avg > 200) setBpm(Math.round(60000 / avg));
+      }
+      clearTimeout(window.tapReset);
+      window.tapReset = setTimeout(() => { tapTimes = []; }, 2200);
+    };
+
+    // Robust Fixed Tuner Engine
+    let micStream = null;
+    let analyser = null;
+    let tunerActive = false;
+    const noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    const tunerBuf = new Float32Array(2048);
+
+    document.getElementById('tuneToggle').onclick = async () => {
+      const ctx = getContext();
+      const btn = document.getElementById('tuneToggle');
+
+      if (!tunerActive) {
+        try {
+          micStream = await navigator.mediaDevices.getUserMedia({
+            audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+          });
+          const src = ctx.createMediaStreamSource(micStream);
+          analyser = ctx.createAnalyser();
+          analyser.fftSize = 2048;
+          src.connect(analyser);
+          tunerActive = true;
+          btn.innerHTML = '<span class="dot-ind"></span> Mic Active';
+          btn.classList.add('active');
+          runTuner();
+        } catch (e) {
+          alert('Microphone permission required for tuner: ' + (e.message || e));
+        }
+      } else {
+        if (micStream) {
+          micStream.getTracks().forEach(t => t.stop());
+          micStream = null;
+        }
+        tunerActive = false;
+        btn.innerHTML = '<span class="dot-ind"></span> Enable Mic';
+        btn.classList.remove('active');
+        document.getElementById('noteDisplay').textContent = '--';
+        document.getElementById('noteDisplay').className = 'tuner-note';
+        document.getElementById('flatChevron').className = 'tuner-chevron';
+        document.getElementById('sharpChevron').className = 'tuner-chevron';
+        document.getElementById('centsNeedle').style.left = '50%';
+        document.getElementById('centsNeedle').className = 'cents-needle';
+        document.getElementById('hzReadout').textContent = '--- Hz · 0 C';
+      }
+    };
+
+    function autoCorrelate(buf, rate) {
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+      if (Math.sqrt(sum / buf.length) < 0.015) return -1;
+
+      let r1 = 0, r2 = buf.length - 1;
+      for (let i = 0; i < buf.length / 2; i++) {
+        if (Math.abs(buf[i]) < 0.2) { r1 = i; break; }
+      }
+      for (let i = 1; i < buf.length / 2; i++) {
+        if (Math.abs(buf[buf.length - i]) < 0.2) { r2 = buf.length - i; break; }
+      }
+
+      const s = buf.slice(r1, r2);
+      const c = new Array(s.length).fill(0);
+      for (let i = 0; i < s.length; i++) {
+        for (let j = 0; j < s.length - i; j++) {
+          c[i] += s[j] * s[j + i];
+        }
+      }
+
+      let d = 0;
+      while (c[d] > c[d + 1]) d++;
+      let maxv = -1, maxpos = -1;
+      for (let i = d; i < s.length; i++) {
+        if (c[i] > maxv) { maxv = c[i]; maxpos = i; }
+      }
+      return rate / maxpos;
+    }
+
+    function runTuner() {
+      if (!tunerActive) return;
+      analyser.getFloatTimeDomainData(tunerBuf);
+      const freq = autoCorrelate(tunerBuf, audioCtx.sampleRate);
+
+      const noteEl = document.getElementById('noteDisplay');
+      const flat = document.getElementById('flatChevron');
+      const sharp = document.getElementById('sharpChevron');
+      const needle = document.getElementById('centsNeedle');
+      const hz = document.getElementById('hzReadout');
+
+      if (freq > 60 && freq < 2200) {
+        const noteNum = 12 * (Math.log(freq / 440) / Math.log(2)) + 69;
+        const rounded = Math.round(noteNum);
+        const cents = Math.floor((noteNum - rounded) * 100);
+
+        noteEl.textContent = noteStrings[rounded % 12];
+        hz.textContent = `${Math.round(freq)} Hz · ${cents > 0 ? '+' : ''}${cents} C`;
+        needle.style.left = `${Math.min(95, Math.max(5, 50 + cents))}%`;
+
+        if (Math.abs(cents) <= 3) {
+          noteEl.className = 'tuner-note in-tune';
+          needle.className = 'cents-needle in-tune';
+          flat.className = 'tuner-chevron';
+          sharp.className = 'tuner-chevron';
+        } else if (cents < -3) {
+          noteEl.className = 'tuner-note';
+          needle.className = 'cents-needle';
+          flat.className = 'tuner-chevron lit';
+          sharp.className = 'tuner-chevron';
+        } else {
+          noteEl.className = 'tuner-note';
+          needle.className = 'cents-needle';
+          flat.className = 'tuner-chevron';
+          sharp.className = 'tuner-chevron lit';
+        }
+      }
+      requestAnimationFrame(runTuner);
+    }
+  </script>
