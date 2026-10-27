@@ -608,7 +608,7 @@
       try {
         wakeLock = await navigator.wakeLock.request('screen');
         wakeToggle.classList.add('active');
-        wakeToggle.textContent = 'Locked On';
+        wakeToggle.textContent = 'Keep-Awake';
         wakeLock.addEventListener('release', () => {
           wakeLock = null;
           wakeToggle.classList.remove('active');
