@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Precision Metronome</title>
 
-  <!-- Native App & PWA Settings -->
+  <!-- PWA & Standalone Configuration -->
   <link rel="manifest" href="manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#070b09">
+  <meta name="theme-color" content="#080c0a">
 
   <style>
     * {
@@ -23,65 +23,35 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     body {
-      background-color: #070b09;
+      background-color: #070a08;
       color: #e4ebe7;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 16px;
+      padding: 12px;
     }
     .app-frame {
       width: 100%;
       max-width: 440px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
-    /* Mode Navigation Tabs */
-    .tab-bar {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      background: #0f1612;
-      border: 1px solid #1a2820;
-      border-radius: 12px;
-      padding: 4px;
-      gap: 4px;
-    }
-    .tab-btn {
-      background: transparent;
-      border: none;
-      color: #6b8577;
-      padding: 10px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      border-radius: 8px;
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: all 0.2s ease;
-    }
-    .tab-btn.active {
-      background: #17241d;
-      color: #10b981;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Studio Hardware Chassis */
+    /* Studio Chassis Base */
     .chassis {
       background: #0d1410;
-      border: 1px solid #1c2e24;
-      border-radius: 18px;
-      padding: 20px 20px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      position: relative;
+      border: 1px solid #1a2920;
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
     .chassis-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .brand-title {
       display: flex;
@@ -90,24 +60,24 @@
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 2px;
-      color: #688374;
+      color: #627e6e;
       text-transform: uppercase;
     }
-    .status-dot {
+    .status-led {
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      background: #1a2b21;
+      background: #17261d;
       transition: all 0.2s ease;
     }
-    .status-dot.active {
+    .status-led.active {
       background: #10b981;
       box-shadow: 0 0 10px #10b981;
     }
     .pill-btn {
-      background: #141f19;
-      border: 1px solid #24382c;
-      color: #7d998b;
+      background: #131e17;
+      border: 1px solid #203428;
+      color: #799587;
       padding: 5px 12px;
       border-radius: 20px;
       font-size: 10px;
@@ -123,102 +93,168 @@
       box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
     }
 
-    /* Pendulum Visual Chamber */
+    /* T1 Tuner Strip */
+    .tuner-card {
+      padding: 12px 18px;
+    }
+    .note-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin: 2px 0 6px;
+    }
+    .chevron {
+      font-size: 24px;
+      color: #18261e;
+      font-weight: 900;
+      transition: color 0.05s ease;
+    }
+    .chevron.lit {
+      color: #ef4444;
+      text-shadow: 0 0 14px rgba(239, 68, 68, 0.8);
+    }
+    .note-name {
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1;
+      color: #273b30;
+      min-width: 80px;
+      text-align: center;
+      transition: color 0.08s ease;
+    }
+    .note-name.in-tune {
+      color: #10b981;
+      text-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+    }
+    .cents-track {
+      width: 100%;
+      height: 6px;
+      background: #131e17;
+      border-radius: 3px;
+      position: relative;
+      margin: 8px 0 4px;
+    }
+    .cents-needle {
+      width: 4px;
+      height: 16px;
+      background: #5d7569;
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 2px;
+      transition: left 0.06s ease-out;
+    }
+    .cents-needle.in-tune {
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+    }
+    .scale-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #556c60;
+      font-weight: 700;
+    }
+
+    /* Mechanical Pendulum Chamber */
     .pendulum-chamber {
       width: 100%;
-      height: 120px;
-      background: #090e0b;
-      border: 1px solid #16241c;
+      height: 125px;
+      background: #080c09;
+      border: 1px solid #14221a;
       border-radius: 12px;
-      overflow: hidden;
       position: relative;
-      margin-bottom: 16px;
-      box-shadow: inset 0 4px 14px rgba(0, 0, 0, 0.7);
+      margin-bottom: 12px;
+      overflow: hidden;
+      box-shadow: inset 0 4px 16px rgba(0, 0, 0, 0.8);
     }
     canvas#pendulumCanvas {
       width: 100%;
       height: 100%;
+      display: block;
     }
 
     /* Tempo Readout */
     .tempo-readout {
       text-align: center;
-      margin: 4px 0 10px;
+      margin: 2px 0 8px;
     }
     .bpm-display {
-      font-size: 80px;
+      font-size: 76px;
       font-weight: 900;
       line-height: 0.95;
       color: #f0f7f3;
       letter-spacing: -2px;
-      text-shadow: 0 0 24px rgba(16, 185, 129, 0.15);
+      text-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
     }
     .tempo-name {
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 800;
       letter-spacing: 3px;
       color: #10b981;
       text-transform: uppercase;
-      margin-top: 6px;
+      margin-top: 5px;
     }
 
-    /* Range Slider */
+    /* Slider */
     .tempo-slider {
       width: 100%;
       height: 6px;
       accent-color: #10b981;
-      margin: 14px 0;
+      margin: 12px 0;
       cursor: pointer;
     }
 
-    /* Step Buttons */
+    /* Step Grid */
     .step-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 16px;
+      gap: 7px;
+      margin-bottom: 14px;
     }
     .btn-step {
-      background: #141f19;
-      border: 1px solid #22352a;
+      background: #131e17;
+      border: 1px solid #1f3226;
       color: #c9dbd1;
-      padding: 10px 0;
-      border-radius: 8px;
+      padding: 9px 0;
+      border-radius: 7px;
       font-weight: 800;
       font-size: 13px;
       cursor: pointer;
-      transition: background 0.1s ease;
     }
-    .btn-step:active { background: #1f3327; }
+    .btn-step:active { background: #1c2e23; }
 
-    /* Sound & Signature Controls */
+    /* Controls Grid */
     .control-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 12px;
+      gap: 8px;
+      margin-bottom: 10px;
     }
     .select-input {
-      background: #141f19;
-      border: 1px solid #22352a;
+      background: #131e17;
+      border: 1px solid #1f3226;
       color: #c9dbd1;
       padding: 9px 10px;
-      border-radius: 8px;
+      border-radius: 7px;
       font-size: 12px;
       font-weight: 700;
       outline: none;
     }
     .btn-tap {
-      background: #141f19;
-      border: 1px solid #22352a;
+      background: #131e17;
+      border: 1px solid #1f3226;
       color: #34d399;
       padding: 9px;
-      border-radius: 8px;
+      border-radius: 7px;
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 1px;
       cursor: pointer;
       text-transform: uppercase;
+      grid-column: span 2;
     }
     .btn-tap:active { background: #064e3b; }
 
@@ -227,14 +263,14 @@
       display: flex;
       justify-content: center;
       gap: 12px;
-      margin: 16px 0 10px;
+      margin: 14px 0 10px;
     }
     .beat-dot {
-      width: 15px;
-      height: 15px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
-      background: #131e18;
-      border: 1px solid #1f3026;
+      background: #121b15;
+      border: 1px solid #1b2b20;
       transition: background 0.05s ease, box-shadow 0.05s ease;
     }
     .beat-dot.active {
@@ -258,7 +294,7 @@
       font-weight: 800;
       letter-spacing: 1.5px;
       cursor: pointer;
-      margin-top: 10px;
+      margin-top: 8px;
       box-shadow: 0 6px 18px rgba(5, 150, 105, 0.4);
       transition: all 0.15s ease;
     }
@@ -266,103 +302,47 @@
       background: #dc2626;
       box-shadow: 0 6px 18px rgba(220, 38, 38, 0.4);
     }
-
-    /* Tuner View Styling */
-    #tunerSection { display: none; }
-    .tuner-chassis {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 16px 0 8px;
-    }
-    .note-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 22px;
-      margin: 8px 0;
-    }
-    .chevron {
-      font-size: 28px;
-      color: #1a2a20;
-      font-weight: 900;
-      transition: color 0.05s ease;
-    }
-    .chevron.lit {
-      color: #ef4444;
-      text-shadow: 0 0 16px rgba(239, 68, 68, 0.8);
-    }
-    .note-name {
-      font-size: 78px;
-      font-weight: 900;
-      line-height: 1;
-      color: #263a30;
-      min-width: 110px;
-      text-align: center;
-      transition: color 0.08s ease;
-    }
-    .note-name.in-tune {
-      color: #10b981;
-      text-shadow: 0 0 24px rgba(16, 185, 129, 0.8);
-    }
-    .cents-track {
-      width: 100%;
-      height: 8px;
-      background: #141f19;
-      border-radius: 4px;
-      position: relative;
-      margin: 20px 0 10px;
-    }
-    .cents-needle {
-      width: 4px;
-      height: 20px;
-      background: #688374;
-      position: absolute;
-      top: -6px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-radius: 2px;
-      transition: left 0.06s ease-out;
-    }
-    .cents-needle.in-tune {
-      background: #10b981;
-      box-shadow: 0 0 12px #10b981;
-    }
-    .scale-row {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: #556c60;
-      font-weight: 700;
-    }
   </style>
 </head>
 <body>
   <div class="app-frame">
 
-    <!-- Mode Selector -->
-    <div class="tab-bar">
-      <button id="tabMetro" class="tab-btn active" onclick="switchTab('metro')">Metronome</button>
-      <button id="tabTuner" class="tab-btn" onclick="switchTab('tuner')">T1 Tuner</button>
+    <!-- T1 CHROMATIC TUNER MODULE -->
+    <div class="chassis tuner-card">
+      <div class="chassis-header">
+        <div class="brand-title">T1 Chromatic Tuner</div>
+        <button id="tuneToggle" class="pill-btn">MIC OFF</button>
+      </div>
+      <div class="note-row">
+        <span id="flatChevron" class="chevron">◀◀</span>
+        <span id="noteDisplay" class="note-name">--</span>
+        <span id="sharpChevron" class="chevron">▶▶</span>
+      </div>
+      <div class="cents-track">
+        <div id="centsNeedle" class="cents-needle"></div>
+      </div>
+      <div class="scale-row">
+        <span>-50¢ FLAT</span>
+        <span id="hzReadout">-- Hz</span>
+        <span>+50¢ SHARP</span>
+      </div>
     </div>
 
-    <!-- METRONOME VIEW -->
-    <div id="metroSection" class="chassis">
+    <!-- PRECISION METRONOME MODULE -->
+    <div class="chassis">
       <div class="chassis-header">
         <div class="brand-title">
-          <div id="powerLed" class="status-dot"></div>
+          <div id="powerLed" class="status-led"></div>
           Precision Metronome
         </div>
         <button id="wakeToggle" class="pill-btn">KEEP-AWAKE</button>
       </div>
 
-      <!-- Swinging Mechanical Pendulum -->
+      <!-- Mechanical Metronome Visualizer -->
       <div class="pendulum-chamber">
-        <canvas id="pendulumCanvas" width="440" height="120"></canvas>
+        <canvas id="pendulumCanvas"></canvas>
       </div>
 
-      <!-- Big BPM & Italian Marking -->
       <div class="tempo-readout">
         <div id="bpmVal" class="bpm-display">120</div>
         <div id="tempoDescriptor" class="tempo-name">Allegro</div>
@@ -379,9 +359,9 @@
 
       <div class="control-row">
         <select id="soundSelect" class="select-input">
-          <option value="woodblock">Woodblock</option>
-          <option value="mechanical">Mechanical</option>
-          <option value="beep">Digital Synth</option>
+          <option value="woodblock">Resonant Woodblock</option>
+          <option value="mechanical">Mechanical Click</option>
+          <option value="beep">Digital Synth Beep</option>
         </select>
         <select id="timeSignature" class="select-input" onchange="updateTimeSig()">
           <option value="4">4/4 Standard</option>
@@ -392,7 +372,7 @@
       </div>
 
       <div class="control-row">
-        <button id="tapBtn" class="btn-tap" style="grid-column: span 2;">TAP TEMPO</button>
+        <button id="tapBtn" class="btn-tap">TAP TEMPO</button>
       </div>
 
       <div id="beatDots" class="beat-indicators">
@@ -405,56 +385,12 @@
       <button id="startBtn" class="main-toggle">START</button>
     </div>
 
-    <!-- TUNER VIEW -->
-    <div id="tunerSection" class="chassis">
-      <div class="chassis-header">
-        <div class="brand-title">T1 Chromatic Tuner</div>
-        <button id="tuneToggle" class="pill-btn">MIC OFF</button>
-      </div>
-
-      <div class="tuner-chassis">
-        <div class="note-row">
-          <span id="flatChevron" class="chevron">◀◀</span>
-          <span id="noteDisplay" class="note-name">--</span>
-          <span id="sharpChevron" class="chevron">▶▶</span>
-        </div>
-        <div class="cents-track">
-          <div id="centsNeedle" class="cents-needle"></div>
-        </div>
-        <div class="scale-row">
-          <span>-50¢ FLAT</span>
-          <span id="hzReadout">-- Hz</span>
-          <span>+50¢ SHARP</span>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <script>
-    // Service Worker Registration for PWA install
+    // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(() => {});
-    }
-
-    // View Switching
-    function switchTab(view) {
-      const metroSec = document.getElementById('metroSection');
-      const tunerSec = document.getElementById('tunerSection');
-      const tabMetro = document.getElementById('tabMetro');
-      const tabTuner = document.getElementById('tabTuner');
-
-      if (view === 'metro') {
-        metroSec.style.display = 'block';
-        tunerSec.style.display = 'none';
-        tabMetro.classList.add('active');
-        tabTuner.classList.remove('active');
-      } else {
-        metroSec.style.display = 'none';
-        tunerSec.style.display = 'block';
-        tabMetro.classList.remove('active');
-        tabTuner.classList.add('active');
-      }
     }
 
     // Audio Context Setup
@@ -465,7 +401,7 @@
       return audioCtx;
     }
 
-    // Background Audio Anchor
+    // Silent background audio anchor (prevents Android tab suspension)
     const silentLoop = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA");
     silentLoop.loop = true;
 
@@ -474,7 +410,7 @@
     const wakeToggle = document.getElementById('wakeToggle');
     wakeToggle.addEventListener('click', async () => {
       if (!('wakeLock' in navigator)) {
-        alert('Wake Lock not supported on this browser.');
+        alert('Wake Lock is not supported on this browser.');
         return;
       }
       try {
@@ -510,28 +446,13 @@
       return 'Prestissimo';
     }
 
-    // Metronome Variables & Web Worker Clock
+    // Timing Engine
     let isRunning = false;
     let bpm = 120;
     let beat = 0;
     let beatsPerBar = 4;
     let nextNoteTime = 0.0;
-    let worker = null;
-    let fallbackTimer = null;
-
-    try {
-      const blob = new Blob([`
-        let t = null;
-        self.onmessage = function(e) {
-          if (e.data === 'start') t = setInterval(() => self.postMessage('tick'), 25);
-          else if (e.data === 'stop') { clearInterval(t); t = null; }
-        };
-      `], { type: 'application/javascript' });
-      worker = new Worker(URL.createObjectURL(blob));
-      worker.onmessage = () => { if (isRunning) scheduler(); };
-    } catch(e) {
-      worker = null;
-    }
+    let timerId = null;
 
     function scheduler() {
       const ctx = getContext();
@@ -583,50 +504,119 @@
       }
     }
 
-    // Studio Pendulum Animation Canvas
+    // High-DPI Mechanical Metronome Canvas Engine
     const canvas = document.getElementById('pendulumCanvas');
     const pCtx = canvas.getContext('2d');
-    let pendulumAngle = 0;
+    let cssWidth = 400;
+    let cssHeight = 125;
 
-    function drawPendulum() {
-      pCtx.clearRect(0, 0, canvas.width, canvas.height);
-      const centerX = canvas.width / 2;
-      const originY = -30;
-      const length = 125;
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      cssWidth = rect.width;
+      cssHeight = rect.height;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      pCtx.resetTransform();
+      pCtx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
 
-      if (isRunning) {
-        const beatDuration = 60.0 / bpm;
-        const progress = ((audioCtx ? audioCtx.currentTime : 0) % (beatDuration * 2)) / (beatDuration * 2);
-        pendulumAngle = Math.sin(progress * Math.PI * 2) * 0.45;
-      } else {
-        pendulumAngle *= 0.94;
-      }
+    function drawMetronome(angle) {
+      pCtx.clearRect(0, 0, cssWidth, cssHeight);
 
-      const bobX = centerX + Math.sin(pendulumAngle) * length;
-      const bobY = originY + Math.cos(pendulumAngle) * length;
+      const centerX = cssWidth / 2;
+      const pivotY = cssHeight - 14;
+      const armLength = cssHeight - 32;
 
-      // Pendulum Shaft
+      // 1. Curved Calibration Scale Arc
       pCtx.beginPath();
-      pCtx.moveTo(centerX, originY);
-      pCtx.lineTo(bobX, bobY);
-      pCtx.strokeStyle = '#22382c';
-      pCtx.lineWidth = 4;
+      pCtx.arc(centerX, pivotY, armLength + 8, -Math.PI / 2 - 0.48, -Math.PI / 2 + 0.48);
+      pCtx.strokeStyle = '#16281e';
+      pCtx.lineWidth = 2.5;
       pCtx.stroke();
 
-      // Weighted Brass/Emerald Bob
+      // Calibration Tick Marks
+      for (let a = -0.42; a <= 0.421; a += 0.07) {
+        const isCenter = Math.abs(a) < 0.02;
+        const isMajor = Math.abs(Math.abs(a) - 0.28) < 0.02 || Math.abs(Math.abs(a) - 0.42) < 0.02;
+        const r1 = armLength + 4;
+        const r2 = armLength + (isCenter ? 14 : (isMajor ? 10 : 6));
+        const x1 = centerX + Math.sin(a) * r1;
+        const y1 = pivotY - Math.cos(a) * r1;
+        const x2 = centerX + Math.sin(a) * r2;
+        const y2 = pivotY - Math.cos(a) * r2;
+
+        pCtx.beginPath();
+        pCtx.moveTo(x1, y1);
+        pCtx.lineTo(x2, y2);
+        pCtx.strokeStyle = isCenter ? '#10b981' : (isMajor ? '#2a4435' : '#1d3226');
+        pCtx.lineWidth = isCenter ? 2.5 : 1.5;
+        pCtx.stroke();
+      }
+
+      // 2. Oscillating Metallic Needle Arm
+      const tipX = centerX + Math.sin(angle) * armLength;
+      const tipY = pivotY - Math.cos(angle) * armLength;
+
       pCtx.beginPath();
-      pCtx.arc(bobX, bobY, 13, 0, Math.PI * 2);
+      pCtx.moveTo(centerX, pivotY);
+      pCtx.lineTo(tipX, tipY);
+      pCtx.strokeStyle = isRunning ? '#34d399' : '#2d4739';
+      pCtx.lineWidth = 3;
+      pCtx.stroke();
+
+      // 3. Sliding Emerald Counterweight Block
+      // Slides higher for slow BPM, lower for fast BPM
+      const normBpm = (bpm - 30) / (250 - 30);
+      const weightDist = armLength * (0.84 - normBpm * 0.48);
+      const weightX = centerX + Math.sin(angle) * weightDist;
+      const weightY = pivotY - Math.cos(angle) * weightDist;
+
+      pCtx.save();
+      pCtx.translate(weightX, weightY);
+      pCtx.rotate(angle);
+      
       pCtx.fillStyle = '#10b981';
-      pCtx.shadowColor = '#059669';
-      pCtx.shadowBlur = 16;
-      pCtx.fill();
+      pCtx.strokeStyle = '#064e3b';
+      pCtx.lineWidth = 1.5;
+      if (isRunning) {
+        pCtx.shadowColor = '#059669';
+        pCtx.shadowBlur = 10;
+      }
+      pCtx.fillRect(-9, -7, 18, 14);
+      pCtx.strokeRect(-9, -7, 18, 14);
       pCtx.shadowBlur = 0;
 
-      requestAnimationFrame(drawPendulum);
-    }
-    drawPendulum();
+      // Calibration alignment notch on weight
+      pCtx.fillStyle = '#ffffff';
+      pCtx.fillRect(-1, -5, 2, 10);
+      pCtx.restore();
 
-    // Beat Visuals
+      // 4. Solid Pivot Rivet at Base
+      pCtx.beginPath();
+      pCtx.arc(centerX, pivotY, 7, 0, Math.PI * 2);
+      pCtx.fillStyle = '#064e3b';
+      pCtx.strokeStyle = '#10b981';
+      pCtx.lineWidth = 2;
+      pCtx.fill();
+      pCtx.stroke();
+    }
+
+    // Continuous Animation Loop (Runs immediately on load)
+    let startTime = 0;
+    function renderLoop() {
+      let currentAngle = 0;
+      if (isRunning) {
+        const beatPeriod = 60.0 / bpm;
+        const elapsed = (performance.now() - startTime) / 1000;
+        currentAngle = Math.sin(elapsed * (Math.PI / beatPeriod)) * 0.42;
+      }
+      drawMetronome(currentAngle);
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Visual Beat Dots
     function updateTimeSig() {
       beatsPerBar = parseInt(document.getElementById('timeSignature').value);
       const container = document.getElementById('beatDots');
@@ -649,7 +639,7 @@
       }, delay);
     }
 
-    // Start / Stop
+    // Start / Stop Controller
     const startBtn = document.getElementById('startBtn');
     const powerLed = document.getElementById('powerLed');
 
@@ -659,16 +649,15 @@
       if (isRunning) {
         silentLoop.play().catch(() => {});
         beat = 0;
+        startTime = performance.now();
         nextNoteTime = ctx.currentTime + 0.05;
-        if (worker) worker.postMessage('start');
-        else fallbackTimer = setInterval(scheduler, 25);
+        timerId = setInterval(scheduler, 25);
         startBtn.textContent = 'STOP';
         startBtn.classList.add('running');
         powerLed.classList.add('active');
       } else {
         silentLoop.pause();
-        if (worker) worker.postMessage('stop');
-        else clearInterval(fallbackTimer);
+        clearInterval(timerId);
         startBtn.textContent = 'START';
         startBtn.classList.remove('running');
         powerLed.classList.remove('active');
@@ -676,7 +665,7 @@
       }
     };
 
-    // Tempo Controls
+    // Tempo adjustments
     const bpmVal = document.getElementById('bpmVal');
     const bpmSlider = document.getElementById('bpmSlider');
     const tempoDesc = document.getElementById('tempoDescriptor');
@@ -690,7 +679,7 @@
     function changeBpm(delta) { setBpm(bpm + delta); }
     bpmSlider.oninput = (e) => setBpm(parseInt(e.target.value));
 
-    // Tap Tempo
+    // Tap Tempo Detector
     let tapTimes = [];
     document.getElementById('tapBtn').onclick = () => {
       const now = performance.now();
@@ -698,13 +687,9 @@
       if (tapTimes.length > 4) tapTimes.shift();
       if (tapTimes.length >= 2) {
         const intervals = [];
-        for (let i = 1; i < tapTimes.length; i++) {
-          intervals.push(tapTimes[i] - tapTimes[i - 1]);
-        }
+        for (let i = 1; i < tapTimes.length; i++) intervals.push(tapTimes[i] - tapTimes[i - 1]);
         const avg = intervals.reduce((a, b) => a + b) / intervals.length;
-        if (avg < 2000 && avg > 200) {
-          setBpm(Math.round(60000 / avg));
-        }
+        if (avg < 2000 && avg > 200) setBpm(Math.round(60000 / avg));
       }
       clearTimeout(window.tapReset);
       window.tapReset = setTimeout(() => { tapTimes = []; }, 2200);
@@ -730,4 +715,94 @@
           analyser.fftSize = 2048;
           src.connect(analyser);
           tunerActive = true;
-          
+          btn.textContent = 'MIC ON';
+          btn.classList.add('active');
+          runTuner();
+        } catch (e) {
+          alert('Microphone permission required for tuner.');
+        }
+      } else {
+        if (micStream) micStream.getTracks().forEach(t => t.stop());
+        tunerActive = false;
+        btn.textContent = 'MIC OFF';
+        btn.classList.remove('active');
+        document.getElementById('noteDisplay').textContent = '--';
+        document.getElementById('noteDisplay').className = 'note-name';
+        document.getElementById('flatChevron').className = 'chevron';
+        document.getElementById('sharpChevron').className = 'chevron';
+        document.getElementById('centsNeedle').style.left = '50%';
+        document.getElementById('centsNeedle').className = 'cents-needle';
+        document.getElementById('hzReadout').textContent = '-- Hz';
+      }
+    };
+
+    function autoCorrelate(buf, rate) {
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+      if (Math.sqrt(sum / buf.length) < 0.015) return -1;
+
+      let r1 = 0, r2 = buf.length - 1;
+      for (let i = 0; i < buf.length / 2; i++) if (Math.abs(buf[i]) < 0.2) { r1 = i; break; }
+      for (let i = 1; i < buf.length / 2; i++) if (Math.abs(buf[buffer.length - i]) < 0.2) { r2 = buf.length - i; break; }
+      
+      const s = buf.slice(r1, r2);
+      const c = new Array(s.length).fill(0);
+      for (let i = 0; i < s.length; i++) for (let j = 0; j < s.length - i; j++) c[i] += s[j] * s[j + i];
+
+      let d = 0; while (c[d] > c[d + 1]) d++;
+      let maxv = -1, maxpos = -1;
+      for (let i = d; i < s.length; i++) if (c[i] > maxv) { maxv = c[i]; maxpos = i; }
+      return rate / maxpos;
+    }
+
+    function runTuner() {
+      if (!tunerActive) return;
+      analyser.getFloatTimeDomainData(tunerBuf);
+      const freq = autoCorrelate(tunerBuf, audioCtx.sampleRate);
+
+      const noteEl = document.getElementById('noteDisplay');
+      const flat = document.getElementById('flatChevron');
+      const sharp = document.getElementById('sharpChevron');
+      const needle = document.getElementById('centsNeedle');
+      const hz = document.getElementById('hzReadout');
+
+      if (freq > 60 && freq < 2200) {
+        const noteNum = 12 * (Math.log(freq / 440) / Math.log(2)) + 69;
+        const rounded = Math.round(noteNum);
+        const cents = Math.floor((noteNum - rounded) * 100);
+
+        noteEl.textContent = noteStrings[rounded % 12];
+        hz.textContent = Math.round(freq) + ' Hz';
+        needle.style.left = `${Math.min(95, Math.max(5, 50 + cents))}%`;
+
+        if (Math.abs(cents) <= 3) {
+          noteEl.className = 'note-name in-tune';
+          needle.className = 'cents-needle in-tune';
+          flat.className = 'chevron';
+          sharp.className = 'chevron';
+        } else if (cents < -3) {
+          noteEl.className = 'note-name';
+          needle.className = 'cents-needle';
+          flat.className = 'chevron lit';
+          sharp.className = 'chevron';
+        } else {
+          noteEl.className = 'note-name';
+          needle.className = 'cents-needle';
+          flat.className = 'chevron';
+          sharp.className = 'chevron lit';
+        }
+      }
+      requestAnimationFrame(runTuner);
+    }
+
+    // Initialize Canvas on Page Load
+    window.addEventListener('DOMContentLoaded', () => {
+      resizeCanvas();
+      renderLoop();
+    });
+    // Fallback in case DOM is already loaded
+    resizeCanvas();
+    renderLoop();
+  </script>
+</body>
+</html>
