@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Precision Metronome</title>
+  <title>ChromaPulse</title>
 
-  <!-- PWA & Standalone Configuration -->
+  <!-- PWA & Standalone App Settings -->
   <link rel="manifest" href="manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#070a08">
+  <meta name="theme-color" content="#070a10">
 
   <style>
     * {
@@ -24,124 +24,229 @@
     }
 
     body {
-      background: radial-gradient(circle at 50% 10%, #112018 0%, #070a08 70%);
-      color: #e4ebe7;
+      background-color: #070a10;
+      color: #e2e8f0;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 14px 12px 24px;
+      padding: 16px 14px 28px;
     }
 
     .app-frame {
       width: 100%;
-      max-width: 430px;
+      max-width: 440px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
     }
 
-    /* Studio Chassis Unit */
-    .chassis {
-      background: linear-gradient(180deg, #131f18 0%, #0d1511 45%, #080c09 100%);
-      border: 1px solid #23392c;
+    /* Top Brand Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2px;
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1.8px;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+    .brand-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #00d294;
+      color: #070a10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .top-pill {
+      background: #0e1522;
+      border: 1px solid #1b263b;
+      color: #798ba3;
+      padding: 6px 12px;
       border-radius: 18px;
-      padding: 16px 18px 18px;
-      position: relative;
-      box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.8),
-        inset 0 1px 0 rgba(255, 255, 255, 0.12),
-        inset 0 -2px 4px rgba(0, 0, 0, 0.6);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+    .top-pill.active {
+      background: #064e3b;
+      border-color: #00d294;
+      color: #34d399;
+      box-shadow: 0 0 10px rgba(0, 210, 148, 0.35);
     }
 
-    /* Corner Rivets */
-    .rivet {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #4e6a5b 0%, #15221b 80%);
-      box-shadow: inset 0 1px 1px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.15);
+    /* ChromaPulse Studio Cards */
+    .card {
+      background: #0c121d;
+      border: 1px solid #172233;
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
     }
-    .rivet.tl { top: 9px; left: 9px; }
-    .rivet.tr { top: 9px; right: 9px; }
-    .rivet.bl { bottom: 9px; left: 9px; }
-    .rivet.br { bottom: 9px; right: 9px; }
-
-    .chassis-header {
+    .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
     }
-
-    .brand-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .card-title {
       font-size: 11px;
       font-weight: 800;
-      letter-spacing: 2.2px;
-      color: #729281;
+      letter-spacing: 2px;
+      color: #556987;
       text-transform: uppercase;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     }
 
-    .status-led {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #14221a;
-      border: 1px solid #243b2e;
-      transition: all 0.2s ease;
-    }
-    .status-led.active {
-      background: #10b981;
-      border-color: #34d399;
-      box-shadow: 0 0 10px #10b981, 0 0 20px rgba(16, 185, 129, 0.6);
-    }
-
-    .pill-btn {
-      background: linear-gradient(180deg, #1a2a21 0%, #101a14 100%);
-      border: 1px solid #2a4435;
-      color: #8daea0;
-      padding: 6px 13px;
+    /* Interactive Tempo Style Dropdown */
+    .tempo-pill-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background: #09261d;
+      border: 1px solid #00d294;
+      color: #00d294;
+      padding: 5px 14px;
       border-radius: 20px;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 800;
-      letter-spacing: 0.8px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
-      transition: all 0.15s ease;
-    }
-    .pill-btn.active {
-      background: linear-gradient(180deg, #059669 0%, #046c4b 100%);
-      border-color: #34d399;
-      color: #ffffff;
-      box-shadow: 0 0 14px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+      outline: none;
+      text-align-last: center;
+      box-shadow: 0 0 10px rgba(0, 210, 148, 0.2);
     }
 
-    /* Recessed Glass Visualizer Chamber */
-    .chamber {
+    /* T1 Tuner Section */
+    .tune-btn {
+      background: #101928;
+      border: 1px solid #1c2b42;
+      color: #8da2c0;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tune-btn .dot-ind {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #556987;
+    }
+    .tune-btn.active {
+      background: #064e3b;
+      border-color: #00d294;
+      color: #00d294;
+    }
+    .tune-btn.active .dot-ind {
+      background: #00d294;
+      box-shadow: 0 0 8px #00d294;
+    }
+    .tuner-display {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      margin: 10px 0 4px;
+    }
+    .tuner-chevron {
+      font-size: 26px;
+      color: #172437;
+      font-weight: 900;
+      transition: color 0.05s ease;
+    }
+    .tuner-chevron.lit {
+      color: #ef4444;
+      text-shadow: 0 0 14px rgba(239, 68, 68, 0.8);
+    }
+    .tuner-note {
+      font-size: 60px;
+      font-weight: 900;
+      line-height: 1;
+      color: #24354d;
+      min-width: 90px;
+      text-align: center;
+      transition: color 0.08s ease;
+    }
+    .tuner-note.in-tune {
+      color: #00d294;
+      text-shadow: 0 0 20px rgba(0, 210, 148, 0.8);
+    }
+    .tuner-sub {
+      text-align: center;
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .cents-track {
       width: 100%;
-      height: 125px;
-      background: radial-gradient(circle at 50% 100%, #0e1712 0%, #050806 80%);
-      border: 1px solid #1a2c22;
-      border-radius: 12px;
+      height: 4px;
+      background: #141d2c;
+      border-radius: 2px;
+      position: relative;
+      margin: 10px 0 6px;
+    }
+    .cents-needle {
+      width: 3px;
+      height: 16px;
+      background: #475569;
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 2px;
+      transition: left 0.06s ease-out;
+    }
+    .cents-needle.in-tune {
+      background: #00d294;
+      box-shadow: 0 0 10px #00d294;
+    }
+    .scale-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #475569;
+      font-weight: 700;
+    }
+
+    /* Recessed Pendulum Visualizer */
+    .pendulum-box {
+      width: 100%;
+      height: 100px;
+      background: #080c14;
+      border: 1px solid #141d2c;
+      border-radius: 10px;
       position: relative;
       overflow: hidden;
       margin-bottom: 14px;
-      box-shadow: 
-        inset 0 6px 14px rgba(0, 0, 0, 0.9),
-        inset 0 -1px 1px rgba(255, 255, 255, 0.05),
-        0 2px 6px rgba(0, 0, 0, 0.3);
-    }
-    .chamber::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; height: 40px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
-      pointer-events: none;
+      box-shadow: inset 0 4px 14px rgba(0, 0, 0, 0.8);
     }
     canvas#pendulumCanvas {
       width: 100%;
@@ -149,331 +254,327 @@
       display: block;
     }
 
-    /* Phosphor Tempo Readout */
-    .tempo-readout {
-      text-align: center;
-      margin-bottom: 8px;
+    /* BPM & Quick Step Controls */
+    .bpm-control-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
     }
-    .bpm-display {
-      font-size: 82px;
-      font-weight: 900;
-      line-height: 0.95;
-      color: #eafff5;
-      letter-spacing: -2px;
-      text-shadow: 
-        0 0 16px rgba(16, 185, 129, 0.45),
-        0 0 35px rgba(16, 185, 129, 0.2);
-    }
-    .tempo-name {
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 4px;
-      color: #10b981;
-      text-transform: uppercase;
-      margin-top: 5px;
-      text-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
-    }
-
-    /* Beveled Slider Track */
-    .tempo-slider {
-      width: 100%;
-      height: 7px;
-      background: #090e0b;
-      border-radius: 4px;
-      border: 1px solid #1c2e24;
-      accent-color: #10b981;
-      margin: 14px 0 16px;
-      cursor: pointer;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
-    }
-
-    /* Tactile 3D Buttons */
-    .step-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 14px;
+    .step-pair {
+      display: flex;
+      gap: 6px;
     }
     .btn-step {
-      background: linear-gradient(180deg, #1a2a20 0%, #101b14 100%);
-      border: 1px solid #284232;
-      border-top: 1px solid #365742;
-      color: #d1e2d8;
-      padding: 10px 0;
+      background: #111a28;
+      border: 1px solid #1c2b40;
+      color: #94a3b8;
+      width: 44px;
+      height: 38px;
       border-radius: 8px;
       font-weight: 800;
       font-size: 13px;
       cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       transition: all 0.1s ease;
     }
     .btn-step:active {
-      transform: translateY(1px);
-      background: #0c140f;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.7), inset 0 2px 4px rgba(0,0,0,0.8);
+      background: #1c2b40;
+      color: #ffffff;
+    }
+    .bpm-center {
+      text-align: center;
+      flex: 1;
+    }
+    .bpm-val {
+      font-size: 72px;
+      font-weight: 900;
+      line-height: 0.95;
+      color: #ffffff;
+      letter-spacing: -2px;
+    }
+    .bpm-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #64748b;
+      margin-top: 4px;
     }
 
-    /* Control Selectors */
-    .control-row {
+    /* Slider Track */
+    .slider {
+      width: 100%;
+      height: 6px;
+      accent-color: #00d294;
+      margin: 12px 0 16px;
+      cursor: pointer;
+    }
+
+    /* Numbered Beat Circles: 1 2 3 4 */
+    .beat-counter-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .beat-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #101826;
+      border: 1px solid #1c293d;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      transition: all 0.05s ease;
+    }
+    .beat-circle.active {
+      background: #00d294;
+      border-color: #00d294;
+      color: #070a10;
+      box-shadow: 0 0 16px rgba(0, 210, 148, 0.8);
+      transform: scale(1.08);
+    }
+    .beat-circle.accent {
+      background: #f59e0b;
+      border-color: #f59e0b;
+      color: #070a10;
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.8);
+      transform: scale(1.1);
+    }
+
+    /* Action Buttons: TAP TEMPO & START */
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .btn-tap {
+      background: #101826;
+      border: 1px solid #1c293d;
+      border-radius: 12px;
+      padding: 12px 10px;
+      color: #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      cursor: pointer;
+      transition: background 0.1s ease;
+    }
+    .btn-tap:active { background: #182438; }
+    .btn-tap-sub {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #64748b;
+    }
+    .btn-tap-main {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #ffffff;
+    }
+
+    .btn-start {
+      background: #00d294;
+      border: none;
+      border-radius: 12px;
+      color: #070a10;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0, 210, 148, 0.4);
+      transition: all 0.15s ease;
+    }
+    .btn-start.running {
+      background: #ef4444;
+      color: #ffffff;
+      box-shadow: 0 8px 24px rgba(239, 68, 68, 0.45);
+    }
+
+    /* Dropdown Settings Rows */
+    .settings-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-bottom: 12px;
+      margin-top: 4px;
+    }
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .setting-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #556987;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
     .select-input {
-      background: linear-gradient(180deg, #15221a 0%, #0e1712 100%);
-      border: 1px solid #243d2e;
-      border-top: 1px solid #304e3b;
-      color: #d1e2d8;
-      padding: 10px;
+      background: #101826;
+      border: 1px solid #1c293d;
+      color: #cbd5e1;
+      padding: 9px 10px;
       border-radius: 8px;
       font-size: 12px;
       font-weight: 700;
       outline: none;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
-    }
-    .btn-tap {
-      background: linear-gradient(180deg, #17261d 0%, #0e1712 100%);
-      border: 1px solid #233b2c;
-      border-top: 1px solid #34543f;
-      color: #34d399;
-      padding: 11px;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      cursor: pointer;
-      text-transform: uppercase;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
-      grid-column: span 2;
-    }
-    .btn-tap:active {
-      transform: translateY(1px);
-      background: #064e3b;
-      color: #ffffff;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.7);
     }
 
-    /* Recessed LED Beat Indicators */
-    .beat-indicators {
-      display: flex;
-      justify-content: center;
-      gap: 14px;
-      margin: 14px 0 12px;
-    }
-    .beat-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #090e0b;
-      border: 1px solid #1a2c20;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(255,255,255,0.05);
-      transition: all 0.05s ease;
-    }
-    .beat-dot.active {
-      background: #10b981;
-      border-color: #34d399;
-      box-shadow: 0 0 14px #10b981, 0 0 25px rgba(16, 185, 129, 0.6);
-    }
-    .beat-dot.accent {
-      background: #f59e0b;
-      border-color: #fbbf24;
-      box-shadow: 0 0 16px #f59e0b, 0 0 28px rgba(245, 158, 11, 0.6);
-    }
-
-    /* Glossy Hardware Rocker Switch */
-    .main-toggle {
-      width: 100%;
-      padding: 16px;
-      border-radius: 12px;
-      border: 1px solid #059669;
-      border-top: 1px solid #34d399;
-      background: linear-gradient(180deg, #10b981 0%, #059669 45%, #047857 100%);
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      cursor: pointer;
-      margin-top: 8px;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-      box-shadow: 
-        0 8px 24px rgba(5, 150, 105, 0.45),
-        inset 0 1px 0 rgba(255, 255, 255, 0.35),
-        inset 0 -2px 0 rgba(0, 0, 0, 0.3);
-      transition: all 0.15s ease;
-    }
-    .main-toggle:active {
-      transform: translateY(1px);
-    }
-    .main-toggle.running {
-      border-color: #dc2626;
-      border-top-color: #f87171;
-      background: linear-gradient(180deg, #ef4444 0%, #dc2626 45%, #b91c1c 100%);
-      box-shadow: 
-        0 8px 24px rgba(220, 38, 38, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.35),
-        inset 0 -2px 0 rgba(0, 0, 0, 0.3);
-    }
-
-    /* T1 Tuner Section */
-    .tuner-card {
-      padding: 14px 18px 16px;
-    }
-    .note-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 22px;
-      margin: 4px 0 6px;
-    }
-    .chevron {
-      font-size: 26px;
-      color: #16241a;
-      font-weight: 900;
-      transition: color 0.05s ease;
-    }
-    .chevron.lit {
-      color: #ef4444;
-      text-shadow: 0 0 16px rgba(239, 68, 68, 0.85);
-    }
-    .note-name {
-      font-size: 58px;
-      font-weight: 900;
-      line-height: 1;
-      color: #213327;
-      min-width: 90px;
+    /* Footer Tagline */
+    .footer-note {
       text-align: center;
-      transition: color 0.08s ease;
-    }
-    .note-name.in-tune {
-      color: #10b981;
-      text-shadow: 0 0 24px rgba(16, 185, 129, 0.8);
-    }
-    .cents-track {
-      width: 100%;
-      height: 6px;
-      background: #090e0b;
-      border: 1px solid #1a2a1f;
-      border-radius: 3px;
-      position: relative;
-      margin: 10px 0 6px;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
-    }
-    .cents-needle {
-      width: 4px;
-      height: 18px;
-      background: #5d7569;
-      position: absolute;
-      top: -6px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-radius: 2px;
-      transition: left 0.06s ease-out;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.6);
-    }
-    .cents-needle.in-tune {
-      background: #10b981;
-      box-shadow: 0 0 12px #10b981;
-    }
-    .scale-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 10px;
-      color: #556c60;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+      font-size: 11px;
+      color: #475569;
+      font-family: monospace;
+      letter-spacing: 1px;
+      margin-top: 2px;
     }
   </style>
 </head>
 <body>
   <div class="app-frame">
 
-    <!-- T1 CHROMATIC TUNER MODULE -->
-    <div class="chassis tuner-card">
-      <div class="rivet tl"></div><div class="rivet tr"></div>
-      <div class="rivet bl"></div><div class="rivet br"></div>
+    <!-- Brand Header Bar -->
+    <div class="top-bar">
+      <div class="brand-logo">
+        <div class="brand-badge">CP</div>
+        ChromaPulse
+      </div>
+      <div class="top-actions">
+        <button id="wakeToggle" class="top-pill">Keep-Awake</button>
+      </div>
+    </div>
 
-      <div class="chassis-header">
-        <div class="brand-title">T1 Chromatic Tuner</div>
-        <button id="tuneToggle" class="pill-btn">MIC OFF</button>
+    <!-- T1 Chromatic Tuner Card -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">T1 Chromatic Tuner</span>
+        <button id="tuneToggle" class="tune-btn">
+          <span class="dot-ind"></span>
+          Enable Mic
+        </button>
       </div>
 
-      <div class="note-row">
-        <span id="flatChevron" class="chevron">◀◀</span>
-        <span id="noteDisplay" class="note-name">--</span>
-        <span id="sharpChevron" class="chevron">▶▶</span>
+      <div class="tuner-display">
+        <span id="flatChevron" class="tuner-chevron">◀◀</span>
+        <span id="noteDisplay" class="tuner-note">--</span>
+        <span id="sharpChevron" class="tuner-chevron">▶▶</span>
       </div>
+
+      <div id="hzReadout" class="tuner-sub">--- Hz · 0 C</div>
 
       <div class="cents-track">
         <div id="centsNeedle" class="cents-needle"></div>
       </div>
-
       <div class="scale-row">
-        <span>-50¢ FLAT</span>
-        <span id="hzReadout">-- Hz</span>
-        <span>+50¢ SHARP</span>
+        <span>-50¢</span>
+        <span>0</span>
+        <span>+50¢</span>
       </div>
     </div>
 
-    <!-- PRECISION METRONOME MODULE -->
-    <div class="chassis">
-      <div class="rivet tl"></div><div class="rivet tr"></div>
-      <div class="rivet bl"></div><div class="rivet br"></div>
+    <!-- Precision Metronome Card -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Precision Metronome</span>
+        <!-- Clickable Tempo Style Selector -->
+        <select id="tempoSelect" class="tempo-pill-select" onchange="applyTempoStyle()">
+          <option value="40">Grave (40)</option>
+          <option value="50">Largo (50)</option>
+          <option value="60">Larghetto (60)</option>
+          <option value="72">Adagio (72)</option>
+          <option value="92">Andante (92)</option>
+          <option value="112">Moderato (112)</option>
+          <option value="132" selected>Allegro (132)</option>
+          <option value="160">Vivace (160)</option>
+          <option value="184">Presto (184)</option>
+          <option value="210">Prestissimo (210)</option>
+        </select>
+      </div>
 
-      <div class="chassis-header">
-        <div class="brand-title">
-          <div id="powerLed" class="status-led"></div>
-          Precision Metronome
+      <!-- Pendulum Animation Chamber -->
+      <div class="pendulum-box">
+        <canvas id="pendulumCanvas" width="400" height="100"></canvas>
+      </div>
+
+      <!-- Quick Step + BPM Center -->
+      <div class="bpm-control-row">
+        <div class="step-pair">
+          <button class="btn-step" onclick="changeBpm(-5)">-5</button>
+          <button class="btn-step" onclick="changeBpm(-1)">-1</button>
         </div>
-        <button id="wakeToggle" class="pill-btn">KEEP-AWAKE</button>
+
+        <div class="bpm-center">
+          <div id="bpmVal" class="bpm-val">132</div>
+          <div class="bpm-label">BPM</div>
+        </div>
+
+        <div class="step-pair">
+          <button class="btn-step" onclick="changeBpm(+1)">+1</button>
+          <button class="btn-step" onclick="changeBpm(+5)">+5</button>
+        </div>
       </div>
 
-      <!-- Recessed Mechanical Visualizer -->
-      <div class="chamber">
-        <canvas id="pendulumCanvas" width="400" height="125"></canvas>
+      <input type="range" id="bpmSlider" class="slider" min="30" max="250" value="132">
+
+      <!-- Numbered Beat Indicators: 1 2 3 4 -->
+      <div id="beatContainer" class="beat-counter-row">
+        <div class="beat-circle">1</div>
+        <div class="beat-circle">2</div>
+        <div class="beat-circle">3</div>
+        <div class="beat-circle">4</div>
       </div>
 
-      <div class="tempo-readout">
-        <div id="bpmVal" class="bpm-display">120</div>
-        <div id="tempoDescriptor" class="tempo-name">Allegro</div>
+      <!-- Action Row: TAP & START -->
+      <div class="action-row">
+        <button id="tapBtn" class="btn-tap">
+          <span class="btn-tap-sub">TAP TEMPO</span>
+          <span class="btn-tap-main">TAP</span>
+        </button>
+
+        <button id="startBtn" class="btn-start">
+          ▶ START
+        </button>
       </div>
 
-      <input type="range" id="bpmSlider" class="tempo-slider" min="30" max="250" value="120">
+      <!-- Settings Selectors -->
+      <div class="settings-grid">
+        <div class="setting-group">
+          <span class="setting-label">Sound Preset</span>
+          <select id="soundSelect" class="select-input">
+            <option value="woodblock">Resonant Woodblock</option>
+            <option value="mechanical">Mechanical Click</option>
+            <option value="beep">Digital Synth Beep</option>
+          </select>
+        </div>
 
-      <div class="step-grid">
-        <button class="btn-step" onclick="changeBpm(-5)">-5</button>
-        <button class="btn-step" onclick="changeBpm(-1)">-1</button>
-        <button class="btn-step" onclick="changeBpm(+1)">+1</button>
-        <button class="btn-step" onclick="changeBpm(+5)">+5</button>
+        <div class="setting-group">
+          <span class="setting-label">Time Signature</span>
+          <select id="timeSignature" class="select-input" onchange="updateTimeSig()">
+            <option value="4" selected>4/4 Standard</option>
+            <option value="3">3/4 Waltz</option>
+            <option value="2">2/4 March</option>
+            <option value="5">5/4 Modern</option>
+            <option value="6">6/8 Compound</option>
+          </select>
+        </div>
       </div>
-
-      <div class="control-row">
-        <select id="soundSelect" class="select-input">
-          <option value="woodblock">Resonant Woodblock</option>
-          <option value="mechanical">Mechanical Click</option>
-          <option value="beep">Digital Synth Beep</option>
-        </select>
-        <select id="timeSignature" class="select-input" onchange="updateTimeSig()">
-          <option value="4">4/4 Standard</option>
-          <option value="3">3/4 Waltz</option>
-          <option value="2">2/4 March</option>
-          <option value="6">6/8 Time</option>
-        </select>
-      </div>
-
-      <div class="control-row">
-        <button id="tapBtn" class="btn-tap">TAP TEMPO</button>
-      </div>
-
-      <div id="beatDots" class="beat-indicators">
-        <div class="beat-dot"></div>
-        <div class="beat-dot"></div>
-        <div class="beat-dot"></div>
-        <div class="beat-dot"></div>
-      </div>
-
-      <button id="startBtn" class="main-toggle">START</button>
     </div>
+
+    <div class="footer-note">ChromaPulse • Studio Metronome & Tuner</div>
 
   </div>
 
@@ -495,23 +596,23 @@
     const silentLoop = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA");
     silentLoop.loop = true;
 
-    // Screen Wake Lock
+    // Screen Keep-Awake Lock
     let wakeLock = null;
     const wakeToggle = document.getElementById('wakeToggle');
     wakeToggle.addEventListener('click', async () => {
       if (!('wakeLock' in navigator)) {
-        alert('Wake Lock not supported on this browser.');
+        alert('Wake Lock is not supported on this browser.');
         return;
       }
       try {
         if (!wakeLock) {
           wakeLock = await navigator.wakeLock.request('screen');
           wakeToggle.classList.add('active');
-          wakeToggle.textContent = 'LOCKED ON';
+          wakeToggle.textContent = 'Locked On';
           wakeLock.addEventListener('release', () => {
             wakeLock = null;
             wakeToggle.classList.remove('active');
-            wakeToggle.textContent = 'KEEP-AWAKE';
+            wakeToggle.textContent = 'Keep-Awake';
           });
         } else {
           await wakeLock.release();
@@ -522,23 +623,9 @@
       }
     });
 
-    // Italian Tempo Descriptor Mapping
-    function getTempoName(b) {
-      if (b < 45) return 'Grave';
-      if (b < 60) return 'Largo';
-      if (b < 66) return 'Larghetto';
-      if (b < 76) return 'Adagio';
-      if (b < 108) return 'Andante';
-      if (b < 120) return 'Moderato';
-      if (b < 156) return 'Allegro';
-      if (b < 176) return 'Vivace';
-      if (b < 200) return 'Presto';
-      return 'Prestissimo';
-    }
-
-    // Metronome Timing Engine
+    // Timing Engine & Web Worker Clock
     let isRunning = false;
-    let bpm = 120;
+    let bpm = 132;
     let beat = 0;
     let beatsPerBar = 4;
     let nextNoteTime = 0.0;
@@ -594,288 +681,46 @@
       }
     }
 
-    // Mechanical Canvas Visualizer with Immediate Drawing
+    // Pendulum Canvas Renderer
     const canvas = document.getElementById('pendulumCanvas');
     const pCtx = canvas.getContext('2d');
 
-    function drawMetronome(angle) {
+    function drawPendulum(angle) {
       pCtx.clearRect(0, 0, canvas.width, canvas.height);
 
       const centerX = canvas.width / 2;
-      const pivotY = canvas.height - 12;
-      const armLength = canvas.height - 30;
+      const pivotY = canvas.height - 10;
+      const armLength = canvas.height - 24;
 
-      // 1. Calibration Scale Arc
+      // Calibration Arc
       pCtx.beginPath();
-      pCtx.arc(centerX, pivotY, armLength + 6, -Math.PI / 2 - 0.46, -Math.PI / 2 + 0.46);
-      pCtx.strokeStyle = '#182b20';
+      pCtx.arc(centerX, pivotY, armLength + 4, -Math.PI / 2 - 0.44, -Math.PI / 2 + 0.44);
+      pCtx.strokeStyle = '#172233';
       pCtx.lineWidth = 2;
       pCtx.stroke();
 
-      // Calibration Tick Marks
+      // Tick marks
       for (let a = -0.42; a <= 0.421; a += 0.07) {
         const isCenter = Math.abs(a) < 0.02;
-        const isMajor = Math.abs(Math.abs(a) - 0.28) < 0.02 || Math.abs(Math.abs(a) - 0.42) < 0.02;
-        const r1 = armLength + 4;
-        const r2 = armLength + (isCenter ? 14 : (isMajor ? 10 : 6));
-        const x1 = centerX + Math.sin(a) * r1;
-        const y1 = pivotY - Math.cos(a) * r1;
-        const x2 = centerX + Math.sin(a) * r2;
-        const y2 = pivotY - Math.cos(a) * r2;
-
+        const r1 = armLength + 2;
+        const r2 = armLength + (isCenter ? 12 : 6);
         pCtx.beginPath();
-        pCtx.moveTo(x1, y1);
-        pCtx.lineTo(x2, y2);
-        pCtx.strokeStyle = isCenter ? '#10b981' : (isMajor ? '#2e4c3b' : '#1d3226');
-        pCtx.lineWidth = isCenter ? 2.5 : 1.5;
+        pCtx.moveTo(centerX + Math.sin(a) * r1, pivotY - Math.cos(a) * r1);
+        pCtx.lineTo(centerX + Math.sin(a) * r2, pivotY - Math.cos(a) * r2);
+        pCtx.strokeStyle = isCenter ? '#00d294' : '#1e2d42';
+        pCtx.lineWidth = isCenter ? 2 : 1.5;
         pCtx.stroke();
       }
 
-      // 2. Oscillating Metallic Arm
+      // Arm
       const tipX = centerX + Math.sin(angle) * armLength;
       const tipY = pivotY - Math.cos(angle) * armLength;
-
       pCtx.beginPath();
       pCtx.moveTo(centerX, pivotY);
       pCtx.lineTo(tipX, tipY);
-      pCtx.strokeStyle = isRunning ? '#34d399' : '#274132';
+      pCtx.strokeStyle = isRunning ? '#00d294' : '#2d3f56';
       pCtx.lineWidth = 3;
       pCtx.stroke();
 
-      // 3. Sliding Counterweight Block (moves up/down based on BPM)
-      const normBpm = (bpm - 30) / (250 - 30);
-      const weightDist = armLength * (0.84 - normBpm * 0.48);
-      const weightX = centerX + Math.sin(angle) * weightDist;
-      const weightY = pivotY - Math.cos(angle) * weightDist;
-
-      pCtx.save();
-      pCtx.translate(weightX, weightY);
-      pCtx.rotate(angle);
-
-      // Gradient Brass-Emerald Block
-      const wGrad = pCtx.createLinearGradient(-10, -7, 10, 7);
-      wGrad.addColorStop(0, '#34d399');
-      wGrad.addColorStop(0.5, '#10b981');
-      wGrad.addColorStop(1, '#064e3b');
-      pCtx.fillStyle = wGrad;
-      pCtx.strokeStyle = '#042f24';
-      pCtx.lineWidth = 1.5;
-
-      if (isRunning) {
-        pCtx.shadowColor = '#10b981';
-        pCtx.shadowBlur = 12;
-      }
-      pCtx.fillRect(-10, -7, 20, 14);
-      pCtx.strokeRect(-10, -7, 20, 14);
-      pCtx.shadowBlur = 0;
-
-      // Calibration alignment notch
-      pCtx.fillStyle = '#ffffff';
-      pCtx.fillRect(-1, -5, 2, 10);
-      pCtx.restore();
-
-      // 4. Pivot Rivet Base
-      pCtx.beginPath();
-      pCtx.arc(centerX, pivotY, 7, 0, Math.PI * 2);
-      pCtx.fillStyle = '#064e3b';
-      pCtx.strokeStyle = '#10b981';
-      pCtx.lineWidth = 2;
-      pCtx.fill();
-      pCtx.stroke();
-    }
-
-    // Continuous Animation Loop
-    let startTime = 0;
-    function renderLoop() {
-      let currentAngle = 0;
-      if (isRunning) {
-        const beatPeriod = 60.0 / bpm;
-        const elapsed = (performance.now() - startTime) / 1000;
-        currentAngle = Math.sin(elapsed * (Math.PI / beatPeriod)) * 0.42;
-      }
-      drawMetronome(currentAngle);
-      requestAnimationFrame(renderLoop);
-    }
-    renderLoop();
-
-    // Beat Visuals
-    function updateTimeSig() {
-      beatsPerBar = parseInt(document.getElementById('timeSignature').value);
-      const container = document.getElementById('beatDots');
-      container.innerHTML = '';
-      for (let i = 0; i < beatsPerBar; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'beat-dot';
-        container.appendChild(dot);
-      }
-    }
-
-    function triggerBeatVisual(index, noteTime) {
-      const ctx = getContext();
-      const delay = Math.max(0, (noteTime - ctx.currentTime) * 1000);
-      const dots = document.querySelectorAll('.beat-dot');
-      setTimeout(() => {
-        dots.forEach((dot, i) => {
-          dot.className = 'beat-dot' + (i === index ? (i === 0 ? ' accent' : ' active') : '');
-        });
-      }, delay);
-    }
-
-    // Start / Stop Controller
-    const startBtn = document.getElementById('startBtn');
-    const powerLed = document.getElementById('powerLed');
-
-    startBtn.onclick = () => {
-      const ctx = getContext();
-      isRunning = !isRunning;
-      if (isRunning) {
-        silentLoop.play().catch(() => {});
-        beat = 0;
-        startTime = performance.now();
-        nextNoteTime = ctx.currentTime + 0.05;
-        timerId = setInterval(scheduler, 25);
-        startBtn.textContent = 'STOP';
-        startBtn.classList.add('running');
-        powerLed.classList.add('active');
-      } else {
-        silentLoop.pause();
-        clearInterval(timerId);
-        startBtn.textContent = 'START';
-        startBtn.classList.remove('running');
-        powerLed.classList.remove('active');
-        document.querySelectorAll('.beat-dot').forEach(d => d.className = 'beat-dot');
-      }
-    };
-
-    // Tempo adjustments
-    const bpmVal = document.getElementById('bpmVal');
-    const bpmSlider = document.getElementById('bpmSlider');
-    const tempoDesc = document.getElementById('tempoDescriptor');
-
-    function setBpm(val) {
-      bpm = Math.min(250, Math.max(30, val));
-      bpmVal.textContent = bpm;
-      bpmSlider.value = bpm;
-      tempoDesc.textContent = getTempoName(bpm);
-    }
-    function changeBpm(delta) { setBpm(bpm + delta); }
-    bpmSlider.oninput = (e) => setBpm(parseInt(e.target.value));
-
-    // Tap Tempo Detector
-    let tapTimes = [];
-    document.getElementById('tapBtn').onclick = () => {
-      const now = performance.now();
-      tapTimes.push(now);
-      if (tapTimes.length > 4) tapTimes.shift();
-      if (tapTimes.length >= 2) {
-        const intervals = [];
-        for (let i = 1; i < tapTimes.length; i++) intervals.push(tapTimes[i] - tapTimes[i - 1]);
-        const avg = intervals.reduce((a, b) => a + b) / intervals.length;
-        if (avg < 2000 && avg > 200) setBpm(Math.round(60000 / avg));
-      }
-      clearTimeout(window.tapReset);
-      window.tapReset = setTimeout(() => { tapTimes = []; }, 2200);
-    };
-
-    // T1 Chromatic Tuner Engine
-    let micStream = null;
-    let analyser = null;
-    let tunerActive = false;
-    const noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-    const tunerBuf = new Float32Array(1024);
-
-    document.getElementById('tuneToggle').onclick = async () => {
-      const ctx = getContext();
-      const btn = document.getElementById('tuneToggle');
-      if (!tunerActive) {
-        try {
-          micStream = await navigator.mediaDevices.getUserMedia({
-            audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
-          });
-          const src = ctx.createMediaStreamSource(micStream);
-          analyser = ctx.createAnalyser();
-          analyser.fftSize = 2048;
-          src.connect(analyser);
-          tunerActive = true;
-          btn.textContent = 'MIC ON';
-          btn.classList.add('active');
-          runTuner();
-        } catch (e) {
-          alert('Microphone permission required for tuner.');
-        }
-      } else {
-        if (micStream) micStream.getTracks().forEach(t => t.stop());
-        tunerActive = false;
-        btn.textContent = 'MIC OFF';
-        btn.classList.remove('active');
-        document.getElementById('noteDisplay').textContent = '--';
-        document.getElementById('noteDisplay').className = 'note-name';
-        document.getElementById('flatChevron').className = 'chevron';
-        document.getElementById('sharpChevron').className = 'chevron';
-        document.getElementById('centsNeedle').style.left = '50%';
-        document.getElementById('centsNeedle').className = 'cents-needle';
-        document.getElementById('hzReadout').textContent = '-- Hz';
-      }
-    };
-
-    function autoCorrelate(buf, rate) {
-      let sum = 0;
-      for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
-      if (Math.sqrt(sum / buf.length) < 0.015) return -1;
-
-      let r1 = 0, r2 = buf.length - 1;
-      for (let i = 0; i < buf.length / 2; i++) if (Math.abs(buf[i]) < 0.2) { r1 = i; break; }
-      for (let i = 1; i < buf.length / 2; i++) if (Math.abs(buf[buf.length - i]) < 0.2) { r2 = buf.length - i; break; }
-      
-      const s = buf.slice(r1, r2);
-      const c = new Array(s.length).fill(0);
-      for (let i = 0; i < s.length; i++) for (let j = 0; j < s.length - i; j++) c[i] += s[j] * s[j + i];
-
-      let d = 0; while (c[d] > c[d + 1]) d++;
-      let maxv = -1, maxpos = -1;
-      for (let i = d; i < s.length; i++) if (c[i] > maxv) { maxv = c[i]; maxpos = i; }
-      return rate / maxpos;
-    }
-
-    function runTuner() {
-      if (!tunerActive) return;
-      analyser.getFloatTimeDomainData(tunerBuf);
-      const freq = autoCorrelate(tunerBuf, audioCtx.sampleRate);
-
-      const noteEl = document.getElementById('noteDisplay');
-      const flat = document.getElementById('flatChevron');
-      const sharp = document.getElementById('sharpChevron');
-      const needle = document.getElementById('centsNeedle');
-      const hz = document.getElementById('hzReadout');
-
-      if (freq > 60 && freq < 2200) {
-        const noteNum = 12 * (Math.log(freq / 440) / Math.log(2)) + 69;
-        const rounded = Math.round(noteNum);
-        const cents = Math.floor((noteNum - rounded) * 100);
-
-        noteEl.textContent = noteStrings[rounded % 12];
-        hz.textContent = Math.round(freq) + ' Hz';
-        needle.style.left = `${Math.min(95, Math.max(5, 50 + cents))}%`;
-
-        if (Math.abs(cents) <= 3) {
-          noteEl.className = 'note-name in-tune';
-          needle.className = 'cents-needle in-tune';
-          flat.className = 'chevron';
-          sharp.className = 'chevron';
-        } else if (cents < -3) {
-          noteEl.className = 'note-name';
-          needle.className = 'cents-needle';
-          flat.className = 'chevron lit';
-          sharp.className = 'chevron';
-        } else {
-          noteEl.className = 'note-name';
-          needle.className = 'cents-needle';
-          flat.className = 'chevron';
-          sharp.className = 'chevron lit';
-        }
-      }
-      requestAnimationFrame(runTuner);
-    }
-  </script>
-</body>
-</html>
+      // Sliding Weight
+      const normBpm = (bpm - 30) / (250 - 30
