@@ -968,7 +968,7 @@
       backdrop.style.display = 'flex';
     }
 
-    // Custom Time Signature Input Screen
+    // Custom Time Signature Input Screen (Clean Placeholder - No OS Menus)
     function showCustomTimeScreen() {
       const title = document.getElementById('menuTitle');
       const list = document.getElementById('menuOptionsList');
@@ -978,9 +978,9 @@
         <div class="custom-container">
           <div class="custom-hint">Enter Beats / Note Value</div>
           <div class="custom-input-row">
-            <input type="text" inputmode="numeric" pattern="[0-9]*" id="customNumerator" class="custom-num-input" value="${beatsPerBar}" maxlength="2" onfocus="this.select(); setTimeout(() => this.select(), 50);" onclick="this.select(); setTimeout(() => this.select(), 50);" autofocus>
+            <input type="text" inputmode="numeric" pattern="[0-9]*" id="customNumerator" class="custom-num-input" placeholder="${beatsPerBar}" value="" autocomplete="off" autofocus>
             <span class="custom-slash">/</span>
-            <input type="text" inputmode="numeric" pattern="[0-9]*" id="customDenominator" class="custom-num-input" value="${currentDenom}" maxlength="2" onfocus="this.select(); setTimeout(() => this.select(), 50);" onclick="this.select(); setTimeout(() => this.select(), 50);">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" id="customDenominator" class="custom-num-input" placeholder="${currentDenom}" value="" autocomplete="off">
           </div>
           <div class="custom-btn-row">
             <button class="btn-custom-back" onclick="openMenu('time')">Back</button>
@@ -991,18 +991,17 @@
 
       setTimeout(() => {
         const numInput = document.getElementById('customNumerator');
-        if (numInput) {
-          numInput.focus();
-          numInput.select();
-        }
+        if (numInput) numInput.focus();
       }, 50);
     }
 
     function submitCustomTime() {
       const numInput = document.getElementById('customNumerator');
       const denInput = document.getElementById('customDenominator');
-      let num = parseInt(numInput.value, 10);
-      let den = parseInt(denInput.value, 10);
+      
+      // Fall back to the ghost placeholder number if left blank
+      let num = parseInt(numInput.value || numInput.placeholder, 10);
+      let den = parseInt(denInput.value || denInput.placeholder, 10);
 
       if (isNaN(num) || num < 1) num = 4;
       if (num > 24) num = 24;
@@ -1013,6 +1012,13 @@
     }
 
     function closeMenu() {
+      // Strips focus and clears any lingering Android text selection toolbar
+      if (document.activeElement && document.activeElement.blur) {
+        document.activeElement.blur();
+      }
+      if (window.getSelection) {
+        window.getSelection().removeAllRanges();
+      }
       document.getElementById('menuBackdrop').style.display = 'none';
     }
 
