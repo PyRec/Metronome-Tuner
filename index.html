@@ -696,7 +696,7 @@
         Hear the Beat
       </div>
       <div class="top-actions">
-        <button id="wakeToggle" class="top-pill">Keep-Awake</button>
+        <button id="wakeToggle" class="top-pill">Keep Awake</button>
       </div>
     </div>
 
@@ -846,7 +846,7 @@
       }
     }
 
-    // Screen Keep-Awake Engine
+    // Screen Keep Awake Engine
     let wakeLock = null;
     const wakeToggle = document.getElementById('wakeToggle');
     async function requestWakeLock() {
@@ -857,12 +857,12 @@
         wakeLock.addEventListener('release', () => {
           wakeLock = null;
           wakeToggle.classList.remove('active');
-          wakeToggle.textContent = 'Keep-Awake';
+          wakeToggle.textContent = 'Keep Awake';
         });
       } catch (err) {
         wakeLock = null;
         wakeToggle.classList.remove('active');
-        wakeToggle.textContent = 'Keep-Awake';
+        wakeToggle.textContent = 'Keep Awake';
       }
     }
     wakeToggle.addEventListener('click', async () => {
