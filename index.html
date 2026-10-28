@@ -106,6 +106,7 @@
       border-radius: 16px;
       padding: 18px 20px;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+      transition: padding 0.2s ease;
     }
     .card-header {
       display: flex;
@@ -119,6 +120,28 @@
       letter-spacing: 2px;
       color: #556987;
       text-transform: uppercase;
+    }
+
+    /* Collapsible Tuner Styles */
+    .card.tuner-minimized {
+      padding: 12px 18px;
+    }
+    .card.tuner-minimized .card-header {
+      margin-bottom: 0;
+    }
+    .card.tuner-minimized #tunerBody,
+    .card.tuner-minimized #tuneToggle {
+      display: none !important;
+    }
+    .tuner-title-btn {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.15s ease;
+    }
+    .tuner-title-btn:hover {
+      color: #00d294;
     }
 
     /* Playing Style Trigger Pill */
@@ -630,31 +653,36 @@
       </div>
     </div>
 
-    <!-- T1 Chromatic Tuner -->
-    <div class="card">
+    <!-- T1 Chromatic Tuner (Collapsible by tapping title) -->
+    <div id="tunerCard" class="card">
       <div class="card-header">
-        <span class="card-title">T1 Chromatic Tuner</span>
+        <span class="card-title tuner-title-btn" onclick="toggleTuner()">
+          T1 Chromatic Tuner
+          <span id="tunerCaret" style="font-size: 9px; color: #00d294; transition: transform 0.2s ease;">▼</span>
+        </span>
         <button id="tuneToggle" class="tune-btn">
           <span class="dot-ind"></span>
           Enable Mic
         </button>
       </div>
 
-      <div class="tuner-display">
-        <span id="flatChevron" class="tuner-chevron">◀◀</span>
-        <span id="noteDisplay" class="tuner-note">--</span>
-        <span id="sharpChevron" class="tuner-chevron">▶▶</span>
-      </div>
+      <div id="tunerBody">
+        <div class="tuner-display">
+          <span id="flatChevron" class="tuner-chevron">◀◀</span>
+          <span id="noteDisplay" class="tuner-note">--</span>
+          <span id="sharpChevron" class="tuner-chevron">▶▶</span>
+        </div>
 
-      <div id="hzReadout" class="tuner-sub">--- Hz · 0 C</div>
+        <div id="hzReadout" class="tuner-sub">--- Hz · 0 C</div>
 
-      <div class="cents-track">
-        <div id="centsNeedle" class="cents-needle"></div>
-      </div>
-      <div class="scale-row">
-        <span>-50¢</span>
-        <span>0</span>
-        <span>+50¢</span>
+        <div class="cents-track">
+          <div id="centsNeedle" class="cents-needle"></div>
+        </div>
+        <div class="scale-row">
+          <span>-50¢</span>
+          <span>0</span>
+          <span>+50¢</span>
+        </div>
       </div>
     </div>
 
@@ -758,6 +786,18 @@
     // Silent audio anchor for background running
     const silentLoop = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA");
     silentLoop.loop = true;
+
+    // Tuner Collapse / Expand Toggle
+    function toggleTuner() {
+      const card = document.getElementById('tunerCard');
+      const caret = document.getElementById('tunerCaret');
+      card.classList.toggle('tuner-minimized');
+      if (card.classList.contains('tuner-minimized')) {
+        caret.style.transform = 'rotate(-90deg)';
+      } else {
+        caret.style.transform = 'rotate(0deg)';
+      }
+    }
 
     // Screen Keep-Awake Engine
     let wakeLock = null;
@@ -891,7 +931,7 @@
       backdrop.style.display = 'flex';
     }
 
-    // Custom Time Signature Input Screen
+    // Custom Time Signature Input Screen with Instant Auto-Selection
     function showCustomTimeScreen() {
       const title = document.getElementById('menuTitle');
       const list = document.getElementById('menuOptionsList');
@@ -912,8 +952,6 @@
         </div>
       `;
 
-
-      // Auto focus on the numerator
       setTimeout(() => {
         const numInput = document.getElementById('customNumerator');
         if (numInput) {
@@ -930,7 +968,7 @@
       let den = parseInt(denInput.value, 10);
 
       if (isNaN(num) || num < 1) num = 4;
-      if (num > 24) num = 24; // safety cap on visual circles
+      if (num > 24) num = 24;
       if (isNaN(den) || den < 1) den = 4;
 
       setTimeSig(num, den, `${num}/${den}`);
