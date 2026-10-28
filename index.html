@@ -968,7 +968,7 @@
       backdrop.style.display = 'flex';
     }
 
-    // Custom Time Signature Input Screen (Clean Placeholder - No OS Menus)
+    // Custom Time Signature Input Screen
     function showCustomTimeScreen() {
       const title = document.getElementById('menuTitle');
       const list = document.getElementById('menuOptionsList');
@@ -978,9 +978,35 @@
         <div class="custom-container">
           <div class="custom-hint">Enter Beats / Note Value</div>
           <div class="custom-input-row">
-            <input type="text" inputmode="numeric" pattern="[0-9]*" id="customNumerator" class="custom-num-input" placeholder="${beatsPerBar}" value="" autocomplete="off" autofocus>
+            <input type="text" 
+                   inputmode="numeric" 
+                   pattern="[0-9]*" 
+                   id="customNumerator" 
+                   class="custom-num-input" 
+                   placeholder="${beatsPerBar}" 
+                   value="" 
+                   maxlength="1" 
+                   autocomplete="off" 
+                   autocorrect="off" 
+                   autocapitalize="off" 
+                   spellcheck="false" 
+                   data-lpignore="true" 
+                   oninput="if(this.value.length >= 1) document.getElementById('customDenominator').focus();" 
+                   autofocus>
             <span class="custom-slash">/</span>
-            <input type="text" inputmode="numeric" pattern="[0-9]*" id="customDenominator" class="custom-num-input" placeholder="${currentDenom}" value="" autocomplete="off">
+            <input type="text" 
+                   inputmode="numeric" 
+                   pattern="[0-9]*" 
+                   id="customDenominator" 
+                   class="custom-num-input" 
+                   placeholder="${currentDenom}" 
+                   value="" 
+                   maxlength="2" 
+                   autocomplete="off" 
+                   autocorrect="off" 
+                   autocapitalize="off" 
+                   spellcheck="false" 
+                   data-lpignore="true">
           </div>
           <div class="custom-btn-row">
             <button class="btn-custom-back" onclick="openMenu('time')">Back</button>
@@ -999,7 +1025,7 @@
       const numInput = document.getElementById('customNumerator');
       const denInput = document.getElementById('customDenominator');
       
-      // Fall back to the ghost placeholder number if left blank
+      // Falls back to the placeholder if left blank
       let num = parseInt(numInput.value || numInput.placeholder, 10);
       let den = parseInt(denInput.value || denInput.placeholder, 10);
 
@@ -1012,7 +1038,7 @@
     }
 
     function closeMenu() {
-      // Strips focus and clears any lingering Android text selection toolbar
+      // Dismisses virtual keyboard and clears any floating OS toolbars
       if (document.activeElement && document.activeElement.blur) {
         document.activeElement.blur();
       }
