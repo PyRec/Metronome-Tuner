@@ -30,15 +30,17 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 16px 14px 28px;
+      padding: clamp(6px, 2vw, 14px) clamp(6px, 2vw, 12px);
+      overflow-x: hidden;
     }
 
     .app-frame {
       width: 100%;
       max-width: 440px;
+      min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: clamp(8px, 2vh, 12px);
       position: relative;
     }
 
@@ -48,48 +50,52 @@
       justify-content: space-between;
       align-items: center;
       padding: 0 2px;
+      min-width: 0;
     }
     .brand-logo {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 14px;
+      gap: clamp(6px, 1.5vw, 10px);
+      font-size: clamp(11px, 3.2vw, 14px);
       font-weight: 800;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.2px;
       color: #ffffff;
       text-transform: uppercase;
+      white-space: nowrap;
     }
     .brand-badge {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
+      width: clamp(24px, 6vw, 30px);
+      height: clamp(24px, 6vw, 30px);
+      border-radius: 7px;
       background: #00d294;
       color: #070a10;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
+      font-size: clamp(9px, 2.5vw, 11px);
       font-weight: 900;
       letter-spacing: 0.5px;
-      box-shadow: 0 0 12px rgba(0, 210, 148, 0.4);
+      box-shadow: 0 0 10px rgba(0, 210, 148, 0.4);
+      flex-shrink: 0;
     }
     .top-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .top-pill {
       background: #0e1522;
       border: 1px solid #1b263b;
       color: #798ba3;
-      padding: 6px 14px;
+      padding: clamp(4px, 1vh, 6px) clamp(8px, 2vw, 12px);
       border-radius: 20px;
-      font-size: 11px;
+      font-size: clamp(9px, 2.4vw, 11px);
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
+      white-space: nowrap;
       transition: all 0.15s ease;
     }
     .top-pill.active {
@@ -103,28 +109,33 @@
     .card {
       background: #0c121d;
       border: 1px solid #172233;
-      border-radius: 16px;
-      padding: 18px 20px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+      border-radius: clamp(12px, 3vw, 16px);
+      padding: clamp(10px, 2.8vw, 16px) clamp(10px, 3.2vw, 18px);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
       transition: padding 0.2s ease;
+      min-width: 0;
+      width: 100%;
     }
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: clamp(6px, 1.5vh, 10px);
+      min-width: 0;
+      gap: 6px;
     }
     .card-title {
-      font-size: 11px;
+      font-size: clamp(9px, 2.4vw, 11px);
       font-weight: 800;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       color: #556987;
       text-transform: uppercase;
+      white-space: nowrap;
     }
 
     /* Collapsible Tuner Styles */
     .card.tuner-minimized {
-      padding: 12px 18px;
+      padding: clamp(8px, 1.8vw, 10px) clamp(10px, 3vw, 16px);
     }
     .card.tuner-minimized .card-header {
       margin-bottom: 0;
@@ -137,7 +148,7 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       transition: color 0.15s ease;
     }
     .tuner-title-btn:hover {
@@ -149,39 +160,39 @@
       background: #09261d;
       border: 1px solid #00d294;
       color: #00d294;
-      padding: 5px 14px;
+      padding: clamp(3px, 0.8vh, 5px) clamp(8px, 2vw, 12px);
       border-radius: 20px;
-      font-size: 11px;
+      font-size: clamp(9px, 2.4vw, 11px);
       font-weight: 800;
-      letter-spacing: 1.2px;
+      letter-spacing: 1px;
       text-transform: uppercase;
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(0, 210, 148, 0.2);
+      box-shadow: 0 0 8px rgba(0, 210, 148, 0.2);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      white-space: nowrap;
     }
-    .style-pill:active {
-      background: #0f3d30;
-    }
+    .style-pill:active { background: #0f3d30; }
 
     /* T1 Chromatic Tuner */
     .tune-btn {
       background: #101928;
       border: 1px solid #1c2b42;
       color: #8da2c0;
-      padding: 6px 14px;
+      padding: clamp(4px, 0.9vh, 6px) clamp(8px, 2vw, 12px);
       border-radius: 20px;
-      font-size: 11px;
+      font-size: clamp(9px, 2.4vw, 11px);
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      white-space: nowrap;
     }
     .tune-btn .dot-ind {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: #556987;
     }
@@ -192,45 +203,45 @@
     }
     .tune-btn.active .dot-ind {
       background: #00d294;
-      box-shadow: 0 0 8px #00d294;
+      box-shadow: 0 0 6px #00d294;
     }
     .tuner-display {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 22px;
-      margin: 10px 0 4px;
+      gap: clamp(10px, 4vw, 20px);
+      margin: clamp(4px, 1vh, 8px) 0 2px;
     }
     .tuner-chevron {
-      font-size: 26px;
+      font-size: clamp(18px, 5vw, 24px);
       color: #172437;
       font-weight: 900;
       transition: color 0.05s ease;
     }
     .tuner-chevron.lit {
       color: #ef4444;
-      text-shadow: 0 0 14px rgba(239, 68, 68, 0.8);
+      text-shadow: 0 0 12px rgba(239, 68, 68, 0.8);
     }
     .tuner-note {
-      font-size: 60px;
+      font-size: clamp(38px, 12vw, 56px);
       font-weight: 900;
       line-height: 1;
       color: #24354d;
-      min-width: 90px;
+      min-width: clamp(60px, 18vw, 85px);
       text-align: center;
       transition: color 0.08s ease;
     }
     .tuner-note.in-tune {
       color: #00d294;
-      text-shadow: 0 0 20px rgba(0, 210, 148, 0.8);
+      text-shadow: 0 0 18px rgba(0, 210, 148, 0.8);
     }
     .tuner-sub {
       text-align: center;
-      font-size: 11px;
+      font-size: clamp(9px, 2.4vw, 11px);
       color: #64748b;
       font-weight: 700;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
+      letter-spacing: 0.8px;
+      margin-bottom: clamp(4px, 1vh, 6px);
     }
     .cents-track {
       width: 100%;
@@ -238,14 +249,14 @@
       background: #141d2c;
       border-radius: 2px;
       position: relative;
-      margin: 10px 0 6px;
+      margin: clamp(6px, 1.2vh, 8px) 0 4px;
     }
     .cents-needle {
       width: 3px;
-      height: 16px;
+      height: 14px;
       background: #475569;
       position: absolute;
-      top: -6px;
+      top: -5px;
       left: 50%;
       transform: translateX(-50%);
       border-radius: 2px;
@@ -253,27 +264,28 @@
     }
     .cents-needle.in-tune {
       background: #00d294;
-      box-shadow: 0 0 10px #00d294;
+      box-shadow: 0 0 8px #00d294;
     }
     .scale-row {
       display: flex;
       justify-content: space-between;
-      font-size: 10px;
+      font-size: clamp(8px, 2.2vw, 10px);
       color: #475569;
       font-weight: 700;
     }
 
-    /* Mechanical Pendulum Visualizer */
+    /* Mechanical Pendulum Visualizer (Fluid Height) */
     .pendulum-box {
       width: 100%;
-      height: 100px;
+      min-width: 0;
+      height: clamp(60px, 14vh, 95px);
       background: #080c14;
       border: 1px solid #141d2c;
-      border-radius: 10px;
+      border-radius: 9px;
       position: relative;
       overflow: hidden;
-      margin-bottom: 14px;
-      box-shadow: inset 0 4px 14px rgba(0, 0, 0, 0.8);
+      margin-bottom: clamp(6px, 1.4vh, 10px);
+      box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.8);
     }
     canvas#pendulumCanvas {
       width: 100%;
@@ -281,28 +293,36 @@
       display: block;
     }
 
-    /* BPM Quick Steps */
+    /* BPM Fluid Sizing & Step Grid */
     .bpm-control-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 6px;
+      gap: clamp(4px, 1.5vw, 10px);
+      margin-bottom: 2px;
+      width: 100%;
+      min-width: 0;
     }
     .step-pair {
       display: flex;
-      gap: 6px;
+      gap: clamp(3px, 1vw, 6px);
+      flex: 1;
+      min-width: 0;
     }
     .btn-step {
       background: #111a28;
       border: 1px solid #1c2b40;
       color: #94a3b8;
-      width: 44px;
-      height: 38px;
-      border-radius: 8px;
+      flex: 1;
+      min-width: 0;
+      height: clamp(30px, 5.5vh, 36px);
+      border-radius: 7px;
       font-weight: 800;
-      font-size: 13px;
+      font-size: clamp(10px, 2.6vw, 13px);
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: all 0.1s ease;
     }
     .btn-step:active {
@@ -311,45 +331,46 @@
     }
     .bpm-center {
       text-align: center;
-      flex: 1;
+      flex: 1.2;
+      min-width: 0;
     }
     .bpm-val {
-      font-size: 72px;
+      font-size: clamp(42px, 14vw, 68px);
       font-weight: 900;
       line-height: 0.95;
       color: #ffffff;
-      letter-spacing: -2px;
+      letter-spacing: -1.5px;
     }
     .bpm-label {
-      font-size: 11px;
+      font-size: clamp(8px, 2.2vw, 10px);
       font-weight: 800;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       color: #64748b;
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
     /* Slider Track */
     .slider {
       width: 100%;
-      height: 6px;
+      height: 5px;
       accent-color: #00d294;
-      margin: 12px 0 16px;
+      margin: clamp(6px, 1.2vh, 10px) 0 clamp(8px, 1.5vh, 12px);
       cursor: pointer;
     }
 
-    /* Numbered Beat Circles: Support Multi-Beats & Wrap */
+    /* Numbered Beat Circles */
     .beat-counter-row {
       display: flex;
       justify-content: center;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 18px;
+      gap: clamp(6px, 1.8vw, 10px);
+      margin-bottom: clamp(8px, 1.8vh, 14px);
       max-width: 100%;
     }
     .beat-circle {
-      width: 36px;
-      height: 36px;
+      width: clamp(26px, 7vw, 34px);
+      height: clamp(26px, 7vw, 34px);
       border-radius: 50%;
       background: #101826;
       border: 1px solid #1c293d;
@@ -357,84 +378,90 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: clamp(10px, 2.6vw, 13px);
       font-weight: 800;
       transition: all 0.05s ease;
+      flex-shrink: 0;
     }
     .beat-circle.active {
       background: #00d294;
       border-color: #00d294;
       color: #070a10;
-      box-shadow: 0 0 16px rgba(0, 210, 148, 0.8);
-      transform: scale(1.08);
+      box-shadow: 0 0 12px rgba(0, 210, 148, 0.8);
+      transform: scale(1.06);
     }
     .beat-circle.accent {
       background: #f59e0b;
       border-color: #f59e0b;
       color: #070a10;
-      box-shadow: 0 0 18px rgba(245, 158, 11, 0.8);
-      transform: scale(1.1);
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.8);
+      transform: scale(1.08);
     }
 
     /* Action Row: Time Signature Box + START */
     .action-row {
       display: grid;
-      grid-template-columns: 1.15fr 1.35fr;
-      gap: 12px;
-      margin-bottom: 14px;
+      grid-template-columns: 1fr 1.3fr;
+      gap: clamp(6px, 2vw, 10px);
+      margin-bottom: clamp(6px, 1.4vh, 10px);
+      min-width: 0;
     }
     .btn-action-box {
       background: #101826;
       border: 1px solid #1c293d;
-      border-radius: 12px;
-      padding: 11px 12px;
+      border-radius: 10px;
+      padding: clamp(7px, 1.4vh, 10px) clamp(8px, 2vw, 10px);
       color: #cbd5e1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
+      gap: 2px;
       cursor: pointer;
+      min-width: 0;
       transition: background 0.1s ease;
     }
     .btn-action-box:active { background: #182438; }
     .box-sub {
-      font-size: 9px;
+      font-size: clamp(7.5px, 2vw, 9px);
       font-weight: 800;
-      letter-spacing: 1.5px;
+      letter-spacing: 1px;
       color: #64748b;
       text-transform: uppercase;
+      white-space: nowrap;
     }
     .box-main {
-      font-size: 15px;
+      font-size: clamp(12px, 3.2vw, 15px);
       font-weight: 900;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
       color: #ffffff;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
+      white-space: nowrap;
     }
 
     .btn-start {
       background: #00d294;
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       color: #070a10;
-      font-size: 17px;
+      font-size: clamp(13px, 3.4vw, 16px);
       font-weight: 900;
-      letter-spacing: 1.5px;
+      letter-spacing: 1px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0, 210, 148, 0.4);
+      box-shadow: 0 6px 18px rgba(0, 210, 148, 0.4);
+      min-width: 0;
       transition: all 0.15s ease;
     }
     .btn-start.running {
       background: #ef4444;
       color: #ffffff;
-      box-shadow: 0 8px 24px rgba(239, 68, 68, 0.45);
+      box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45);
     }
 
     /* Sound Preset Bar Button */
@@ -442,38 +469,43 @@
       width: 100%;
       background: #101826;
       border: 1px solid #1c293d;
-      border-radius: 10px;
-      padding: 10px 14px;
+      border-radius: 9px;
+      padding: clamp(6px, 1.2vh, 9px) clamp(10px, 2.5vw, 12px);
       display: flex;
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
+      min-width: 0;
       transition: background 0.1s ease;
     }
     .sound-select-box:active { background: #162234; }
     .sound-label {
-      font-size: 11px;
+      font-size: clamp(8px, 2.2vw, 10px);
       font-weight: 800;
       color: #64748b;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
       text-transform: uppercase;
+      white-space: nowrap;
     }
     .sound-val {
-      font-size: 12px;
+      font-size: clamp(10px, 2.6vw, 12px);
       font-weight: 800;
       color: #cbd5e1;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .footer-note {
       text-align: center;
-      font-size: 11px;
+      font-size: clamp(9px, 2.2vw, 10px);
       color: #475569;
       font-family: monospace;
-      letter-spacing: 1px;
-      margin-top: 2px;
+      letter-spacing: 0.8px;
+      margin-top: 1px;
     }
 
     /* Custom In-App Dropdown Modal */
@@ -487,16 +519,16 @@
       z-index: 1000;
       justify-content: center;
       align-items: center;
-      padding: 16px;
+      padding: 14px;
     }
     .menu-sheet {
       width: 100%;
-      max-width: 360px;
+      max-width: 340px;
       background: #0d1522;
       border: 1px solid #1c2d44;
-      border-radius: 18px;
+      border-radius: 16px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
-      padding: 16px;
+      padding: 14px;
       animation: popIn 0.15s ease-out;
     }
     @keyframes popIn {
@@ -507,14 +539,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 12px;
+      padding-bottom: 10px;
       border-bottom: 1px solid #182538;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .menu-title {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.2px;
       color: #798ba3;
       text-transform: uppercase;
     }
@@ -522,10 +554,10 @@
       background: #141e2e;
       border: none;
       color: #94a3b8;
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
@@ -535,14 +567,14 @@
     .menu-options-list {
       display: flex;
       flex-direction: column;
-      gap: 5px;
-      max-height: 280px;
+      gap: 4px;
+      max-height: 250px;
       overflow-y: auto;
     }
     .menu-item {
-      padding: 12px 14px;
-      border-radius: 10px;
-      font-size: 13px;
+      padding: 10px 12px;
+      border-radius: 9px;
+      font-size: 12px;
       font-weight: 700;
       color: #cbd5e1;
       display: flex;
@@ -566,31 +598,31 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 10px 0 6px;
+      padding: 8px 0 4px;
     }
     .custom-hint {
-      font-size: 11px;
+      font-size: 10px;
       color: #64748b;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
       text-transform: uppercase;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .custom-input-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 10px;
+      margin-bottom: 16px;
     }
     .custom-num-input {
-      width: 72px;
-      height: 58px;
+      width: 64px;
+      height: 52px;
       background: #101826;
       border: 1px solid #1c2d44;
-      border-radius: 12px;
+      border-radius: 10px;
       color: #ffffff;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 900;
       text-align: center;
       outline: none;
@@ -599,10 +631,10 @@
     }
     .custom-num-input:focus {
       border-color: #00d294;
-      box-shadow: 0 0 12px rgba(0, 210, 148, 0.4);
+      box-shadow: 0 0 10px rgba(0, 210, 148, 0.4);
     }
     .custom-slash {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 900;
       color: #556987;
     }
@@ -610,16 +642,16 @@
       width: 100%;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
     }
     .btn-custom-back {
       background: #101826;
       border: 1px solid #1c2b40;
       color: #94a3b8;
-      padding: 12px;
-      border-radius: 10px;
+      padding: 10px;
+      border-radius: 9px;
       font-weight: 800;
-      font-size: 13px;
+      font-size: 12px;
       cursor: pointer;
       text-transform: uppercase;
     }
@@ -628,15 +660,26 @@
       background: #00d294;
       border: none;
       color: #070a10;
-      padding: 12px;
-      border-radius: 10px;
+      padding: 10px;
+      border-radius: 9px;
       font-weight: 900;
-      font-size: 13px;
+      font-size: 12px;
       cursor: pointer;
       text-transform: uppercase;
-      box-shadow: 0 4px 14px rgba(0, 210, 148, 0.35);
+      box-shadow: 0 4px 12px rgba(0, 210, 148, 0.35);
     }
     .btn-custom-ok:active { background: #00ba83; }
+
+    /* Compact / Floating Screen Overrides */
+    @media (max-width: 320px) {
+      .brand-logo { font-size: 11px; }
+      .brand-badge { width: 22px; height: 22px; font-size: 9px; }
+      .top-pill { padding: 3px 7px; font-size: 9px; }
+      .card { padding: 8px 10px; }
+      .pendulum-box { height: 55px; }
+      .bpm-val { font-size: 38px; }
+      .beat-circle { width: 22px; height: 22px; font-size: 9px; }
+    }
   </style>
 </head>
 <body>
@@ -653,12 +696,12 @@
       </div>
     </div>
 
-    <!-- T1 Chromatic Tuner (Collapsible by tapping title) -->
+    <!-- T1 Chromatic Tuner -->
     <div id="tunerCard" class="card">
       <div class="card-header">
         <span class="card-title tuner-title-btn" onclick="toggleTuner()">
           T1 Chromatic Tuner
-          <span id="tunerCaret" style="font-size: 9px; color: #00d294; transition: transform 0.2s ease;">▼</span>
+          <span id="tunerCaret" style="font-size: 8px; color: #00d294; transition: transform 0.2s ease;">▼</span>
         </span>
         <button id="tuneToggle" class="tune-btn">
           <span class="dot-ind"></span>
@@ -692,13 +735,13 @@
         <span class="card-title">Precision Metronome</span>
         <button id="stylePillBtn" class="style-pill" onclick="openMenu('style')">
           <span id="stylePillLabel">Allegro (132)</span>
-          <span style="font-size: 9px;">▼</span>
+          <span style="font-size: 8px;">▼</span>
         </button>
       </div>
 
       <!-- Pendulum Animation Canvas -->
       <div class="pendulum-box">
-        <canvas id="pendulumCanvas" width="400" height="100"></canvas>
+        <canvas id="pendulumCanvas" width="400" height="95"></canvas>
       </div>
 
       <!-- Quick Steps + BPM Display -->
@@ -735,7 +778,7 @@
           <span class="box-sub">Time Signature</span>
           <span id="timeSigDisplay" class="box-main">
             4/4
-            <span style="font-size: 10px; color: #00d294;">▼</span>
+            <span style="font-size: 9px; color: #00d294;">▼</span>
           </span>
         </div>
 
@@ -749,7 +792,7 @@
         <span class="sound-label">Sound Preset</span>
         <span id="soundDisplay" class="sound-val">
           Resonant Woodblock
-          <span style="font-size: 10px; color: #00d294;">▼</span>
+          <span style="font-size: 9px; color: #00d294;">▼</span>
         </span>
       </div>
     </div>
@@ -921,7 +964,7 @@
           item.innerHTML = `<span>${opt.label}</span>${isSel ? '<span>✓</span>' : ''}`;
           item.onclick = () => {
             currentSound = opt.val;
-            document.getElementById('soundDisplay').innerHTML = `${opt.label} <span style="font-size: 10px; color: #00d294;">▼</span>`;
+            document.getElementById('soundDisplay').innerHTML = `${opt.label} <span style="font-size: 9px; color: #00d294;">▼</span>`;
             closeMenu();
           };
           list.appendChild(item);
@@ -983,7 +1026,7 @@
     function setTimeSig(num, den, display) {
       beatsPerBar = num;
       currentDenom = den;
-      document.getElementById('timeSigDisplay').innerHTML = `${display} <span style="font-size: 10px; color: #00d294;">▼</span>`;
+      document.getElementById('timeSigDisplay').innerHTML = `${display} <span style="font-size: 9px; color: #00d294;">▼</span>`;
       const container = document.getElementById('beatContainer');
       container.innerHTML = '';
       for (let i = 1; i <= beatsPerBar; i++) {
@@ -1035,15 +1078,15 @@
       }
     }
 
-    // Pendulum Canvas Renderer
+    // Pendulum Canvas Renderer (Fluid)
     const canvas = document.getElementById('pendulumCanvas');
     const pCtx = canvas.getContext('2d');
 
     function drawPendulum(angle) {
       pCtx.clearRect(0, 0, canvas.width, canvas.height);
       const centerX = canvas.width / 2;
-      const pivotY = canvas.height - 10;
-      const armLength = canvas.height - 24;
+      const pivotY = canvas.height - 8;
+      const armLength = canvas.height - 22;
 
       pCtx.beginPath();
       pCtx.arc(centerX, pivotY, armLength + 4, -Math.PI / 2 - 0.44, -Math.PI / 2 + 0.44);
@@ -1054,7 +1097,7 @@
       for (let a = -0.42; a <= 0.421; a += 0.07) {
         const isCenter = Math.abs(a) < 0.02;
         const r1 = armLength + 2;
-        const r2 = armLength + (isCenter ? 12 : 6);
+        const r2 = armLength + (isCenter ? 10 : 5);
         pCtx.beginPath();
         pCtx.moveTo(centerX + Math.sin(a) * r1, pivotY - Math.cos(a) * r1);
         pCtx.lineTo(centerX + Math.sin(a) * r2, pivotY - Math.cos(a) * r2);
@@ -1083,13 +1126,13 @@
       pCtx.fillStyle = '#00d294';
       if (isRunning) {
         pCtx.shadowColor = '#00d294';
-        pCtx.shadowBlur = 12;
+        pCtx.shadowBlur = 10;
       }
-      pCtx.fillRect(-8, -6, 16, 12);
+      pCtx.fillRect(-7, -5, 14, 10);
       pCtx.restore();
 
       pCtx.beginPath();
-      pCtx.arc(centerX, pivotY, 6, 0, Math.PI * 2);
+      pCtx.arc(centerX, pivotY, 5, 0, Math.PI * 2);
       pCtx.fillStyle = '#00d294';
       pCtx.fill();
     }
