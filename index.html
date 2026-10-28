@@ -620,9 +620,10 @@
       gap: 10px;
       margin-bottom: 16px;
     }
-    .custom-num-input {
+      .custom-num-input {
       width: 64px;
       height: 52px;
+      line-height: 50px;
       background: #101826;
       border: 1px solid #1c2d44;
       border-radius: 10px;
@@ -633,11 +634,20 @@
       outline: none;
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      user-select: text;
+      -webkit-user-select: text;
+      caret-color: #00d294;
     }
     .custom-num-input:focus {
       border-color: #00d294;
       box-shadow: 0 0 10px rgba(0, 210, 148, 0.4);
     }
+    .custom-num-input:empty::before {
+      content: attr(data-placeholder);
+      color: #556987;
+      pointer-events: none;
+    }
+
     .custom-slash {
       font-size: 28px;
       font-weight: 900;
@@ -968,7 +978,7 @@
       backdrop.style.display = 'flex';
     }
 
-    // Custom Time Signature Input Screen
+    // Custom Time Signature Input Screen (Bypasses Chrome Autofill)
     function showCustomTimeScreen() {
       const title = document.getElementById('menuTitle');
       const list = document.getElementById('menuOptionsList');
@@ -978,35 +988,19 @@
         <div class="custom-container">
           <div class="custom-hint">Enter Beats / Note Value</div>
           <div class="custom-input-row">
-            <input type="text" 
-                   inputmode="numeric" 
-                   pattern="[0-9]*" 
-                   id="customNumerator" 
-                   class="custom-num-input" 
-                   placeholder="${beatsPerBar}" 
-                   value="" 
-                   maxlength="1" 
-                   autocomplete="off" 
-                   autocorrect="off" 
-                   autocapitalize="off" 
-                   spellcheck="false" 
-                   data-lpignore="true" 
-                   oninput="if(this.value.length >= 1) document.getElementById('customDenominator').focus();" 
-                   autofocus>
+            <div id="customNumerator" 
+                 class="custom-num-input" 
+                 contenteditable="true" 
+                 inputmode="numeric" 
+                 role="textbox" 
+                 data-placeholder="${beatsPerBar}"></div>
             <span class="custom-slash">/</span>
-            <input type="text" 
-                   inputmode="numeric" 
-                   pattern="[0-9]*" 
-                   id="customDenominator" 
-                   class="custom-num-input" 
-                   placeholder="${currentDenom}" 
-                   value="" 
-                   maxlength="2" 
-                   autocomplete="off" 
-                   autocorrect="off" 
-                   autocapitalize="off" 
-                   spellcheck="false" 
-                   data-lpignore="true">
+            <div id="customDenominator" 
+                 class="custom-num-input" 
+                 contenteditable="true" 
+                 inputmode="numeric" 
+                 role="textbox" 
+                 data-placeholder="${currentDenom}"></div>
           </div>
           <div class="custom-btn-row">
             <button class="btn-custom-back" onclick="openMenu('time')">Back</button>
@@ -1015,8 +1009,38 @@
         </div>
       `;
 
+      const numInput = document.getElementById('customNumerator');
+      const denInput = document.getElementById('customDenominator');
+
+      // Auto-jump to denominator as soon as 1 digit is typed
+      numInput.addEventListener('input', () => {
+        numInput.innerText = numInput.innerText.replace(/[^0-9]/g, '');
+        if (numInput.innerText.length >= 1) {
+          if (numInput.innerText.length > 1) {
+            numInput.innerText = numInput.innerText.slice(0, 1);
+          }
+          denInput.focus();
+        }
+      });
+
+      denInput.addEventListener('input', () => {
+        denInput.innerText = denInput.innerText.replace(/[^0-9]/g, '');
+        if (denInput.innerText.length > 2) {
+          denInput.innerText = denInput.innerText.slice(0, 2);
+        }
+      });
+
+      // Submit on Enter key
+      const handleEnter = (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          submitCustomTime();
+        }
+      };
+      numInput.addEventListener('keydown', handleEnter);
+      denInput.addEventListener('keydown', handleEnter);
+
       setTimeout(() => {
-        const numInput = document.getElementById('customNumerator');
         if (numInput) numInput.focus();
       }, 50);
     }
@@ -1025,9 +1049,12 @@
       const numInput = document.getElementById('customNumerator');
       const denInput = document.getElementById('customDenominator');
       
-      // Falls back to the placeholder if left blank
-      let num = parseInt(numInput.value || numInput.placeholder, 10);
-      let den = parseInt(denInput.value || denInput.placeholder, 10);
+      const rawNum = numInput ? numInput.innerText.trim() : '';
+      const rawDen = denInput ? denInput.innerText.trim() : '';
+
+      // Falls back to the ghost placeholder if left blank
+      let num = parseInt(rawNum || numInput.getAttribute('data-placeholder'), 10);
+      let den = parseInt(rawDen || denInput.getAttribute('data-placeholder'), 10);
 
       if (isNaN(num) || num < 1) num = 4;
       if (num > 24) num = 24;
@@ -1038,7 +1065,6 @@
     }
 
     function closeMenu() {
-      // Dismisses virtual keyboard and clears any floating OS toolbars
       if (document.activeElement && document.activeElement.blur) {
         document.activeElement.blur();
       }
@@ -1047,6 +1073,7 @@
       }
       document.getElementById('menuBackdrop').style.display = 'none';
     }
+
 
     // Time Signature Logic
     function setTimeSig(num, den, display) {
