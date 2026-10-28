@@ -901,9 +901,9 @@
         <div class="custom-container">
           <div class="custom-hint">Enter Beats / Note Value</div>
           <div class="custom-input-row">
-            <input type="text" inputmode="numeric" pattern="[0-9]*" id="customNumerator" class="custom-num-input" value="${beatsPerBar}" maxlength="2" autofocus>
+            <input type="text" inputmode="numeric" pattern="[0-9]*" id="customNumerator" class="custom-num-input" value="${beatsPerBar}" maxlength="2" onfocus="this.select(); setTimeout(() => this.select(), 50);" onclick="this.select(); setTimeout(() => this.select(), 50);" autofocus>
             <span class="custom-slash">/</span>
-            <input type="text" inputmode="numeric" pattern="[0-9]*" id="customDenominator" class="custom-num-input" value="${currentDenom}" maxlength="2">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" id="customDenominator" class="custom-num-input" value="${currentDenom}" maxlength="2" onfocus="this.select(); setTimeout(() => this.select(), 50);" onclick="this.select(); setTimeout(() => this.select(), 50);">
           </div>
           <div class="custom-btn-row">
             <button class="btn-custom-back" onclick="openMenu('time')">Back</button>
@@ -911,6 +911,7 @@
           </div>
         </div>
       `;
+
 
       // Auto focus on the numerator
       setTimeout(() => {
