@@ -1724,20 +1724,32 @@
       }, 4000);
     }
 
-    // Reference Drone Synthesis
+        // Reference Drone Synthesis (Fixed Concurrency & Absolute Zero-Gain Stop)
     function stopDrone() {
       if (activeDrone) {
+        // Capture a local reference so subsequent clicks cannot overwrite it
+        const dyingDrone = activeDrone;
+        activeDrone = null;
+
         const ctx = getContext();
         try {
-          activeDrone.gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+          dyingDrone.gain.gain.cancelScheduledValues(ctx.currentTime);
+          dyingDrone.gain.gain.setValueAtTime(dyingDrone.gain.gain.value, ctx.currentTime);
+          // Ramp completely to 0.00001 (absolute silence) before cutting off
+          dyingDrone.gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.04);
+          // Hardware stop scheduled directly into the audio graph
+          dyingDrone.osc.stop(ctx.currentTime + 0.05);
           setTimeout(() => {
-            try { activeDrone.osc.stop(); } catch(e) {}
-            activeDrone = null;
-          }, 90);
+            try {
+              dyingDrone.osc.disconnect();
+              dyingDrone.gain.disconnect();
+            } catch(e) {}
+          }, 60);
         } catch(e) {
-          activeDrone = null;
+          try { dyingDrone.osc.stop(); } catch(err) {}
         }
       }
+
       if (activeDronePill) {
         activeDronePill.classList.remove('drone-playing');
         const icon = activeDronePill.querySelector('.sound-icon');
@@ -1748,6 +1760,7 @@
 
     function startDrone(freq, pillEl) {
       stopDrone();
+
       const ctx = getContext();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -1755,8 +1768,9 @@
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, ctx.currentTime);
 
-      gain.gain.setValueAtTime(0.001, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.35, ctx.currentTime + 0.08);
+      // Start at pure zero and ramp smoothly to audible volume
+      gain.gain.setValueAtTime(0.00001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.35, ctx.currentTime + 0.05);
 
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -1791,13 +1805,17 @@
         pill.className = 'target-pill';
         pill.id = `pill-str-${idx}`;
         pill.innerHTML = `${str.note}<span class="oct-sub">${str.octave}</span>`;
+
         pill.onclick = () => {
-          if (activeDrone && Math.abs(activeDrone.freq - str.freq) < 0.1) {
+          // If clicking the SAME pill that is actively playing, toggle it off
+          if (activeDrone && activeDronePill === pill) {
             stopDrone();
           } else {
+      // Clicking any different pill instantly crossfades to that note
             startDrone(str.freq, pill);
           }
         };
+
         container.appendChild(pill);
       });
     }
