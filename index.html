@@ -34,7 +34,7 @@
       overflow-x: hidden;
     }
 
-    /* Container Query Root: All sizes derive from this container */
+    /* Container Query Root */
     .app-frame {
       width: 100%;
       max-width: 440px;
@@ -138,6 +138,9 @@
     }
 
     /* Collapsible Tuner Styles */
+    #tunerCard {
+      position: relative;
+    }
     .card.tuner-minimized {
       padding: clamp(7px, 2.5cqw, 12px) clamp(10px, 4cqw, 18px);
     }
@@ -157,28 +160,148 @@
     }
     .tuner-title-btn:hover { color: #00d294; }
 
-    /* Playing Style Pill */
-    .style-pill {
-      background: #09261d;
-      border: 1px solid #00d294;
-      color: #00d294;
-      padding: clamp(3px, 1cqw, 5px) clamp(7px, 2.4cqw, 12px);
-      border-radius: 20px;
-      font-size: clamp(8px, 2.5cqw, 11px);
+    /* Tuner View Navigation Tabs */
+    .tuner-tab-bar {
+      display: flex;
+      justify-content: center;
+      gap: clamp(6px, 2cqw, 10px);
+      margin-bottom: clamp(6px, 2cqw, 10px);
+    }
+    .tuner-tab-btn {
+      background: #101928;
+      border: 1px solid #1c2b42;
+      color: #64748b;
+      padding: clamp(2px, 0.8cqw, 4px) clamp(8px, 2.5cqw, 14px);
+      border-radius: 12px;
+      font-size: clamp(8px, 2.4cqw, 10.5px);
       font-weight: 800;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
+      letter-spacing: 0.5px;
       cursor: pointer;
-      box-shadow: 0 0 8px rgba(0, 210, 148, 0.2);
+      text-transform: uppercase;
+      transition: all 0.15s ease;
+    }
+    .tuner-tab-btn.active {
+      background: #0d2334;
+      border-color: #00b4d8;
+      color: #38bdf8;
+    }
+
+    /* Swipable Tuner Container */
+    .tuner-swipe-viewport {
+      width: 100%;
+      overflow: hidden;
+    }
+    .tuner-swipe-track {
+      display: flex;
+      width: 200%;
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .tuner-slide {
+      width: 50%;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      padding: 0 2px;
+    }
+
+    /* Instrument Selector Buttons */
+    .inst-sel-row {
+      display: flex;
+      justify-content: center;
+      gap: clamp(6px, 2cqw, 10px);
+      margin-bottom: clamp(6px, 2cqw, 10px);
+    }
+    .inst-pill-btn {
+      background: #101826;
+      border: 1px solid #1c293d;
+      color: #94a3b8;
+      padding: clamp(3px, 1cqw, 5px) clamp(8px, 2.4cqw, 12px);
+      border-radius: 14px;
+      font-size: clamp(8px, 2.4cqw, 10.5px);
+      font-weight: 800;
+      cursor: pointer;
       display: flex;
       align-items: center;
       gap: 4px;
-      white-space: nowrap;
-      flex-shrink: 0;
+      transition: all 0.1s ease;
     }
-    .style-pill:active { background: #0f3d30; }
+    .inst-pill-btn:hover, .inst-pill-btn:active {
+      border-color: #00d294;
+      color: #ffffff;
+    }
 
-    /* T1 Chromatic Tuner */
+    /* Target String Note Pills */
+    .string-pills-row {
+      display: flex;
+      justify-content: center;
+      gap: clamp(4px, 1.4cqw, 8px);
+      margin: clamp(8px, 2.5cqw, 12px) 0 clamp(4px, 1cqw, 6px);
+      flex-wrap: wrap;
+    }
+    .target-pill {
+      background: #101826;
+      border: 1px solid #1c2d44;
+      border-radius: 8px;
+      color: #64748b;
+      padding: clamp(4px, 1.2cqw, 6px) clamp(8px, 2.5cqw, 13px);
+      font-size: clamp(9px, 2.8cqw, 12px);
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      transition: all 0.15s ease;
+    }
+    .target-pill .oct-sub {
+      font-size: 0.8em;
+      opacity: 0.8;
+    }
+    .target-pill.detected {
+      border-color: #38bdf8;
+      color: #38bdf8;
+      background: #082236;
+    }
+    .target-pill.in-tune {
+      border-color: #00d294 !important;
+      color: #00d294 !important;
+      background: #062d22 !important;
+      box-shadow: 0 0 10px rgba(0, 210, 148, 0.4);
+    }
+    .target-pill.drone-playing {
+      border-color: #00b4d8;
+      background: #072738;
+      color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Headphone Tip Toast */
+    .tuner-toast {
+      position: absolute;
+      bottom: clamp(6px, 2cqw, 10px);
+      left: 50%;
+      transform: translateX(-50%) translateY(0);
+      background: rgba(13, 21, 34, 0.95);
+      border: 1px solid #00b4d8;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+      color: #e2e8f0;
+      font-size: clamp(8px, 2.5cqw, 10.5px);
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 100;
+      white-space: nowrap;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .tuner-toast.hidden {
+      opacity: 0;
+      transform: translateX(-50%) translateY(10px);
+    }
+
+    /* Tuner Common Controls */
     .tune-btn {
       background: #101928;
       border: 1px solid #1c2b42;
@@ -239,6 +362,18 @@
       color: #00d294;
       text-shadow: 0 0 18px rgba(0, 210, 148, 0.8);
     }
+    .inst-note-box {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      min-width: clamp(55px, 19cqw, 90px);
+    }
+    .inst-octave-sub {
+      font-size: clamp(14px, 5cqw, 24px);
+      font-weight: 700;
+      color: #64748b;
+      margin-left: 2px;
+    }
     .tuner-sub {
       text-align: center;
       font-size: clamp(8.5px, 2.6cqw, 11px);
@@ -277,6 +412,27 @@
       color: #475569;
       font-weight: 700;
     }
+
+    /* Playing Style Pill */
+    .style-pill {
+      background: #09261d;
+      border: 1px solid #00d294;
+      color: #00d294;
+      padding: clamp(3px, 1cqw, 5px) clamp(7px, 2.4cqw, 12px);
+      border-radius: 20px;
+      font-size: clamp(8px, 2.5cqw, 11px);
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0, 210, 148, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .style-pill:active { background: #0f3d30; }
 
     /* Pendulum Visualizer */
     .pendulum-box {
@@ -620,7 +776,7 @@
       gap: 10px;
       margin-bottom: 16px;
     }
-      .custom-num-input {
+    .custom-num-input {
       width: 64px;
       height: 52px;
       line-height: 50px;
@@ -647,7 +803,6 @@
       color: #556987;
       pointer-events: none;
     }
-
     .custom-slash {
       font-size: 28px;
       font-weight: 900;
@@ -700,11 +855,11 @@
       </div>
     </div>
 
-    <!-- T1 Chromatic Tuner -->
+    <!-- HTB Tuner Card -->
     <div id="tunerCard" class="card">
       <div class="card-header">
         <span class="card-title tuner-title-btn" onclick="toggleTuner()">
-          T1 Chromatic Tuner
+          <span id="tunerTitleText">HTB Chromatic Tuner</span>
           <span id="tunerCaret" style="font-size: 8px; color: #00d294; transition: transform 0.2s ease;">▼</span>
         </span>
         <button id="tuneToggle" class="tune-btn">
@@ -714,21 +869,81 @@
       </div>
 
       <div id="tunerBody">
-        <div class="tuner-display">
-          <span id="flatChevron" class="tuner-chevron">◀◀</span>
-          <span id="noteDisplay" class="tuner-note">--</span>
-          <span id="sharpChevron" class="tuner-chevron">▶▶</span>
+        <!-- View Navigation Tabs -->
+        <div class="tuner-tab-bar">
+          <button id="tabChromatic" class="tuner-tab-btn active" onclick="setTunerView('chromatic')">Chromatic</button>
+          <button id="tabInstrument" class="tuner-tab-btn" onclick="setTunerView('instrument')">Instrument</button>
         </div>
 
-        <div id="hzReadout" class="tuner-sub">--- Hz · 0 C</div>
+        <!-- Swipable Viewport -->
+        <div class="tuner-swipe-viewport" id="tunerSwipeViewport">
+          <div class="tuner-swipe-track" id="tunerSwipeTrack">
+            
+            <!-- Slide 1: Chromatic -->
+            <div class="tuner-slide" id="slideChromatic">
+              <div class="tuner-display">
+                <span id="flatChevron" class="tuner-chevron">◀◀</span>
+                <span id="noteDisplay" class="tuner-note">--</span>
+                <span id="sharpChevron" class="tuner-chevron">▶▶</span>
+              </div>
 
-        <div class="cents-track">
-          <div id="centsNeedle" class="cents-needle"></div>
+              <div id="hzReadout" class="tuner-sub">--- Hz · 0 C</div>
+
+              <div class="cents-track">
+                <div id="centsNeedle" class="cents-needle"></div>
+              </div>
+              <div class="scale-row">
+                <span>-50¢</span>
+                <span>0</span>
+                <span>+50¢</span>
+              </div>
+            </div>
+
+            <!-- Slide 2: Instrument Tuner -->
+            <div class="tuner-slide" id="slideInstrument">
+              <!-- Instrument & Tuning Selector Row -->
+              <div class="inst-sel-row">
+                <button class="inst-pill-btn" onclick="openMenu('instrument')">
+                  <span id="instLabel">Violin</span>
+                  <span style="font-size: 7.5px; color: #00d294;">▼</span>
+                </button>
+                <button class="inst-pill-btn" onclick="openMenu('tuning')">
+                  <span id="tuningLabel">Standard</span>
+                  <span style="font-size: 7.5px; color: #00d294;">▼</span>
+                </button>
+              </div>
+
+              <div class="tuner-display">
+                <span id="instFlatChevron" class="tuner-chevron">◀◀</span>
+                <div class="inst-note-box">
+                  <span id="instNoteDisplay" class="tuner-note">--</span>
+                  <span id="instOctaveDisplay" class="inst-octave-sub"></span>
+                </div>
+                <span id="instSharpChevron" class="tuner-chevron">▶▶</span>
+              </div>
+
+              <div class="cents-track">
+                <div id="instCentsNeedle" class="cents-needle"></div>
+              </div>
+              <div class="scale-row">
+                <span>-50¢</span>
+                <span>0</span>
+                <span>+50¢</span>
+              </div>
+
+              <!-- Dynamic Target String Pills -->
+              <div id="stringPillsContainer" class="string-pills-row"></div>
+
+              <div id="instHzReadout" class="tuner-sub" style="margin-top: 6px; margin-bottom: 0;">--- Hz · 0 C</div>
+            </div>
+
+          </div>
         </div>
-        <div class="scale-row">
-          <span>-50¢</span>
-          <span>0</span>
-          <span>+50¢</span>
+
+        <!-- Headphone Tip Toast -->
+        <div id="tunerToast" class="tuner-toast hidden">
+          <span style="font-size: 13px;">🎧</span>
+          <span>Tip: Connect headphones to hear drone and tune together</span>
         </div>
       </div>
     </div>
@@ -768,7 +983,7 @@
 
       <input type="range" id="bpmSlider" class="slider" min="30" max="250" value="132">
 
-      <!-- Numbered Beat Indicators: 1 2 3 4 ... -->
+      <!-- Numbered Beat Indicators -->
       <div id="beatContainer" class="beat-counter-row">
         <div class="beat-circle">1</div>
         <div class="beat-circle">2</div>
@@ -776,7 +991,7 @@
         <div class="beat-circle">4</div>
       </div>
 
-      <!-- Action Row: Strict 1fr 1fr Equal Width -->
+      <!-- Action Row -->
       <div class="action-row">
         <div id="timeSigBtn" class="btn-action-box" onclick="openMenu('time')">
           <span class="box-sub">Time Signature</span>
@@ -879,7 +1094,7 @@
       }
     });
 
-    // App State
+    // App State: Metronome
     let isRunning = false;
     let bpm = 132;
     let beat = 0;
@@ -888,6 +1103,163 @@
     let currentSound = 'woodblock';
     let nextNoteTime = 0.0;
     let timerId = null;
+
+    // Instrument Presets & Alternate Tunings Database
+    const INSTRUMENTS_DATA = {
+      violin: {
+        label: 'Violin',
+        tunings: {
+          standard: {
+            label: 'Standard',
+            strings: [
+              { note: 'G', octave: 3, freq: 196.00 },
+              { note: 'D', octave: 4, freq: 293.66 },
+              { note: 'A', octave: 4, freq: 440.00 },
+              { note: 'E', octave: 5, freq: 659.25 }
+            ]
+          }
+        }
+      },
+      viola: {
+        label: 'Viola',
+        tunings: {
+          standard: {
+            label: 'Standard',
+            strings: [
+              { note: 'C', octave: 3, freq: 130.81 },
+              { note: 'G', octave: 3, freq: 196.00 },
+              { note: 'D', octave: 4, freq: 293.66 },
+              { note: 'A', octave: 4, freq: 440.00 }
+            ]
+          }
+        }
+      },
+      cello: {
+        label: 'Cello',
+        tunings: {
+          standard: {
+            label: 'Standard',
+            strings: [
+              { note: 'C', octave: 2, freq: 65.41 },
+              { note: 'G', octave: 2, freq: 98.00 },
+              { note: 'D', octave: 3, freq: 146.83 },
+              { note: 'A', octave: 3, freq: 220.00 }
+            ]
+          }
+        }
+      },
+      guitar: {
+        label: 'Guitar',
+        tunings: {
+          standard: {
+            label: 'Standard',
+            strings: [
+              { note: 'E', octave: 2, freq: 82.41 },
+              { note: 'A', octave: 2, freq: 110.00 },
+              { note: 'D', octave: 3, freq: 146.83 },
+              { note: 'G', octave: 3, freq: 196.00 },
+              { note: 'B', octave: 3, freq: 246.94 },
+              { note: 'E', octave: 4, freq: 329.63 }
+            ]
+          },
+          openE: {
+            label: 'Open E (Blues)',
+            strings: [
+              { note: 'E', octave: 2, freq: 82.41 },
+              { note: 'B', octave: 2, freq: 123.47 },
+              { note: 'E', octave: 3, freq: 164.81 },
+              { note: 'G#', octave: 3, freq: 207.65 },
+              { note: 'B', octave: 3, freq: 246.94 },
+              { note: 'E', octave: 4, freq: 329.63 }
+            ]
+          },
+          openG: {
+            label: 'Open G (Blues)',
+            strings: [
+              { note: 'D', octave: 2, freq: 73.42 },
+              { note: 'G', octave: 2, freq: 98.00 },
+              { note: 'D', octave: 3, freq: 146.83 },
+              { note: 'G', octave: 3, freq: 196.00 },
+              { note: 'B', octave: 3, freq: 246.94 },
+              { note: 'D', octave: 4, freq: 293.66 }
+            ]
+          },
+          dropD: {
+            label: 'Drop D',
+            strings: [
+              { note: 'D', octave: 2, freq: 73.42 },
+              { note: 'A', octave: 2, freq: 110.00 },
+              { note: 'D', octave: 3, freq: 146.83 },
+              { note: 'G', octave: 3, freq: 196.00 },
+              { note: 'B', octave: 3, freq: 246.94 },
+              { note: 'E', octave: 4, freq: 329.63 }
+            ]
+          },
+          halfStepDown: {
+            label: 'Half-Step Down (Eb)',
+            strings: [
+              { note: 'Eb', octave: 2, freq: 77.78 },
+              { note: 'Ab', octave: 2, freq: 103.83 },
+              { note: 'Db', octave: 3, freq: 138.59 },
+              { note: 'Gb', octave: 3, freq: 185.00 },
+              { note: 'Bb', octave: 3, freq: 233.08 },
+              { note: 'Eb', octave: 4, freq: 311.13 }
+            ]
+          }
+        }
+      },
+      bass: {
+        label: 'Bass Guitar',
+        tunings: {
+          standard: {
+            label: 'Standard (4-String)',
+            strings: [
+              { note: 'E', octave: 1, freq: 41.20 },
+              { note: 'A', octave: 1, freq: 55.00 },
+              { note: 'D', octave: 2, freq: 73.42 },
+              { note: 'G', octave: 2, freq: 98.00 }
+            ]
+          },
+          fiveString: {
+            label: '5-String (Low B)',
+            strings: [
+              { note: 'B', octave: 0, freq: 30.87 },
+              { note: 'E', octave: 1, freq: 41.20 },
+              { note: 'A', octave: 1, freq: 55.00 },
+              { note: 'D', octave: 2, freq: 73.42 },
+              { note: 'G', octave: 2, freq: 98.00 }
+            ]
+          },
+          dropD: {
+            label: 'Drop D',
+            strings: [
+              { note: 'D', octave: 1, freq: 36.71 },
+              { note: 'A', octave: 1, freq: 55.00 },
+              { note: 'D', octave: 2, freq: 73.42 },
+              { note: 'G', octave: 2, freq: 98.00 }
+            ]
+          }
+        }
+      },
+      ukulele: {
+        label: 'Ukulele',
+        tunings: {
+          standard: {
+            label: 'Standard (G C E A)',
+            strings: [
+              { note: 'G', octave: 4, freq: 392.00 },
+              { note: 'C', octave: 4, freq: 261.63 },
+              { note: 'E', octave: 4, freq: 329.63 },
+              { note: 'A', octave: 4, freq: 440.00 }
+            ]
+          }
+        }
+      }
+    };
+
+    let currentInstrument = 'violin';
+    let currentTuning = 'standard';
+    let currentTunerView = 'chromatic';
 
     // Menu Definitions
     const styleOptions = [
@@ -973,12 +1345,47 @@
           };
           list.appendChild(item);
         });
+      } else if (type === 'instrument') {
+        title.textContent = 'Select Instrument';
+        Object.keys(INSTRUMENTS_DATA).forEach(key => {
+          const inst = INSTRUMENTS_DATA[key];
+          const item = document.createElement('div');
+          const isSel = currentInstrument === key;
+          item.className = 'menu-item' + (isSel ? ' selected' : '');
+          item.innerHTML = `<span>${inst.label}</span>${isSel ? '<span>✓</span>' : ''}`;
+          item.onclick = () => {
+            currentInstrument = key;
+            currentTuning = 'standard';
+            document.getElementById('instLabel').textContent = inst.label;
+            document.getElementById('tuningLabel').textContent = inst.tunings['standard'].label;
+            renderStringPills();
+            closeMenu();
+          };
+          list.appendChild(item);
+        });
+      } else if (type === 'tuning') {
+        title.textContent = 'Select Tuning';
+        const tunings = INSTRUMENTS_DATA[currentInstrument].tunings;
+        Object.keys(tunings).forEach(tKey => {
+          const t = tunings[tKey];
+          const item = document.createElement('div');
+          const isSel = currentTuning === tKey;
+          item.className = 'menu-item' + (isSel ? ' selected' : '');
+          item.innerHTML = `<span>${t.label}</span>${isSel ? '<span>✓</span>' : ''}`;
+          item.onclick = () => {
+            currentTuning = tKey;
+            document.getElementById('tuningLabel').textContent = t.label;
+            renderStringPills();
+            closeMenu();
+          };
+          list.appendChild(item);
+        });
       }
 
       backdrop.style.display = 'flex';
     }
 
-    // Custom Time Signature Input Screen (Bypasses Chrome Autofill)
+    // Custom Time Signature Screen
     function showCustomTimeScreen() {
       const title = document.getElementById('menuTitle');
       const list = document.getElementById('menuOptionsList');
@@ -1012,7 +1419,6 @@
       const numInput = document.getElementById('customNumerator');
       const denInput = document.getElementById('customDenominator');
 
-      // Auto-jump to denominator as soon as 1 digit is typed
       numInput.addEventListener('input', () => {
         numInput.innerText = numInput.innerText.replace(/[^0-9]/g, '');
         if (numInput.innerText.length >= 1) {
@@ -1030,7 +1436,6 @@
         }
       });
 
-      // Submit on Enter key
       const handleEnter = (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -1048,11 +1453,9 @@
     function submitCustomTime() {
       const numInput = document.getElementById('customNumerator');
       const denInput = document.getElementById('customDenominator');
-      
       const rawNum = numInput ? numInput.innerText.trim() : '';
       const rawDen = denInput ? denInput.innerText.trim() : '';
 
-      // Falls back to the ghost placeholder if left blank
       let num = parseInt(rawNum || numInput.getAttribute('data-placeholder'), 10);
       let den = parseInt(rawDen || denInput.getAttribute('data-placeholder'), 10);
 
@@ -1074,8 +1477,6 @@
       document.getElementById('menuBackdrop').style.display = 'none';
     }
 
-
-    // Time Signature Logic
     function setTimeSig(num, den, display) {
       beatsPerBar = num;
       currentDenom = den;
@@ -1263,13 +1664,145 @@
     function changeBpm(delta) { setBpm(bpm + delta); }
     bpmSlider.oninput = (e) => setBpm(parseInt(e.target.value));
 
-    // T1 Chromatic Tuner Engine
+    // ==========================================
+    // HTB Tuner Engine (YIN Algorithm + Presets)
+    // ==========================================
     let micStream = null;
     let analyser = null;
     let tunerActive = false;
-    const noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-    const tunerBuf = new Float32Array(2048);
+    let smoothedCents = 0;
+    let activeDrone = null;
+    let activeDronePill = null;
+    let toastTimer = null;
 
+    const noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    const tunerBuf = new Float32Array(4096);
+
+    // View Switching & Swipe
+    function setTunerView(view) {
+      currentTunerView = view;
+      const track = document.getElementById('tunerSwipeTrack');
+      const tabChrom = document.getElementById('tabChromatic');
+      const tabInst = document.getElementById('tabInstrument');
+      const titleText = document.getElementById('tunerTitleText');
+
+      if (view === 'chromatic') {
+        track.style.transform = 'translateX(0%)';
+        tabChrom.classList.add('active');
+        tabInst.classList.remove('active');
+        titleText.textContent = 'HTB Chromatic Tuner';
+      } else {
+        track.style.transform = 'translateX(-50%)';
+        tabChrom.classList.remove('active');
+        tabInst.classList.add('active');
+        titleText.textContent = 'HTB Instrument Tuner';
+      }
+    }
+
+    // Touch Swipe Detection
+    let touchStartX = 0;
+    const viewport = document.getElementById('tunerSwipeViewport');
+    viewport.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    viewport.addEventListener('touchend', e => {
+      const diff = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(diff) > 40) {
+        if (diff < 0) setTunerView('instrument');
+        else setTunerView('chromatic');
+      }
+    }, { passive: true });
+
+    // Toast Notification Controller
+    function showHeadphoneTip() {
+      const toast = document.getElementById('tunerToast');
+      if (!toast) return;
+      toast.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 4000);
+    }
+
+    // Reference Drone Synthesis
+    function stopDrone() {
+      if (activeDrone) {
+        const ctx = getContext();
+        try {
+          activeDrone.gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+          setTimeout(() => {
+            try { activeDrone.osc.stop(); } catch(e) {}
+            activeDrone = null;
+          }, 90);
+        } catch(e) {
+          activeDrone = null;
+        }
+      }
+      if (activeDronePill) {
+        activeDronePill.classList.remove('drone-playing');
+        const icon = activeDronePill.querySelector('.sound-icon');
+        if (icon) icon.remove();
+        activeDronePill = null;
+      }
+    }
+
+    function startDrone(freq, pillEl) {
+      stopDrone();
+      const ctx = getContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+      gain.gain.setValueAtTime(0.001, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.35, ctx.currentTime + 0.08);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+
+      activeDrone = { osc, gain, freq };
+      activeDronePill = pillEl;
+      pillEl.classList.add('drone-playing');
+
+      const icon = document.createElement('span');
+      icon.className = 'sound-icon';
+      icon.style.marginLeft = '4px';
+      icon.style.fontSize = '9px';
+      icon.textContent = '♪';
+      pillEl.appendChild(icon);
+
+      if (tunerActive) {
+        showHeadphoneTip();
+      }
+    }
+
+    // Dynamic String Pills Generator
+    function renderStringPills() {
+      const container = document.getElementById('stringPillsContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      stopDrone();
+
+      const tuningObj = INSTRUMENTS_DATA[currentInstrument].tunings[currentTuning];
+      tuningObj.strings.forEach((str, idx) => {
+        const pill = document.createElement('button');
+        pill.className = 'target-pill';
+        pill.id = `pill-str-${idx}`;
+        pill.innerHTML = `${str.note}<span class="oct-sub">${str.octave}</span>`;
+        pill.onclick = () => {
+          if (activeDrone && Math.abs(activeDrone.freq - str.freq) < 0.1) {
+            stopDrone();
+          } else {
+            startDrone(str.freq, pill);
+          }
+        };
+        container.appendChild(pill);
+      });
+    }
+
+    // Microphone Toggle
     document.getElementById('tuneToggle').onclick = async () => {
       const ctx = getContext();
       const btn = document.getElementById('tuneToggle');
@@ -1281,11 +1814,17 @@
           });
           const src = ctx.createMediaStreamSource(micStream);
           analyser = ctx.createAnalyser();
-          analyser.fftSize = 2048;
+          analyser.fftSize = 4096;
           src.connect(analyser);
           tunerActive = true;
+          smoothedCents = 0;
           btn.innerHTML = '<span class="dot-ind"></span> Mic Active';
           btn.classList.add('active');
+
+          if (activeDrone) {
+            showHeadphoneTip();
+          }
+
           runTuner();
         } catch (e) {
           alert('Microphone permission required for tuner: ' + (e.message || e));
@@ -1298,6 +1837,8 @@
         tunerActive = false;
         btn.innerHTML = '<span class="dot-ind"></span> Enable Mic';
         btn.classList.remove('active');
+
+        // Reset Chromatic Display
         document.getElementById('noteDisplay').textContent = '--';
         document.getElementById('noteDisplay').className = 'tuner-note';
         document.getElementById('flatChevron').className = 'tuner-chevron';
@@ -1305,43 +1846,103 @@
         document.getElementById('centsNeedle').style.left = '50%';
         document.getElementById('centsNeedle').className = 'cents-needle';
         document.getElementById('hzReadout').textContent = '--- Hz · 0 C';
+
+        // Reset Instrument Display
+        document.getElementById('instNoteDisplay').textContent = '--';
+        document.getElementById('instOctaveDisplay').textContent = '';
+        document.getElementById('instNoteDisplay').className = 'tuner-note';
+        document.getElementById('instFlatChevron').className = 'tuner-chevron';
+        document.getElementById('instSharpChevron').className = 'tuner-chevron';
+        document.getElementById('instCentsNeedle').style.left = '50%';
+        document.getElementById('instCentsNeedle').className = 'cents-needle';
+        document.getElementById('instHzReadout').textContent = '--- Hz · 0 C';
+
+        // Clear target pills
+        const tuningObj = INSTRUMENTS_DATA[currentInstrument].tunings[currentTuning];
+        tuningObj.strings.forEach((str, idx) => {
+          const pill = document.getElementById(`pill-str-${idx}`);
+          if (pill) pill.classList.remove('detected', 'in-tune');
+        });
       }
     };
 
-    function autoCorrelate(buf, rate) {
-      let sum = 0;
-      for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
-      if (Math.sqrt(sum / buf.length) < 0.015) return -1;
+    // YIN Pitch Detection Algorithm
+    function detectPitchYIN(buf, sampleRate, minFreq, maxFreq) {
+      let rms = 0;
+      for (let i = 0; i < buf.length; i++) rms += buf[i] * buf[i];
+      rms = Math.sqrt(rms / buf.length);
+      if (rms < 0.012) return -1;
 
-      let r1 = 0, r2 = buf.length - 1;
-      for (let i = 0; i < buf.length / 2; i++) {
-        if (Math.abs(buf[i]) < 0.2) { r1 = i; break; }
-      }
-      for (let i = 1; i < buf.length / 2; i++) {
-        if (Math.abs(buf[buf.length - i]) < 0.2) { r2 = buf.length - i; break; }
+      const halfBuf = Math.floor(buf.length / 2);
+      const yinBuf = new Float32Array(halfBuf);
+      const minTau = Math.floor(sampleRate / maxFreq);
+      const maxTau = Math.min(halfBuf - 1, Math.floor(sampleRate / minFreq));
+
+      // Difference Function
+      for (let tau = 0; tau <= maxTau; tau++) {
+        let sum = 0;
+        for (let i = 0; i < halfBuf; i++) {
+          const delta = buf[i] - buf[i + tau];
+          sum += delta * delta;
+        }
+        yinBuf[tau] = sum;
       }
 
-      const s = buf.slice(r1, r2);
-      const c = new Array(s.length).fill(0);
-      for (let i = 0; i < s.length; i++) {
-        for (let j = 0; j < s.length - i; j++) {
-          c[i] += s[j] * s[j + i];
+      // Cumulative Mean Normalized Difference Function
+      yinBuf[0] = 1;
+      let runningSum = 0;
+      for (let tau = 1; tau <= maxTau; tau++) {
+        runningSum += yinBuf[tau];
+        yinBuf[tau] = runningSum === 0 ? 1 : (yinBuf[tau] * tau) / runningSum;
+      }
+
+      // Absolute Thresholding
+      const threshold = 0.12;
+      let foundTau = -1;
+      for (let t = Math.max(2, minTau); t <= maxTau; t++) {
+        if (yinBuf[t] < threshold) {
+          while (t + 1 <= maxTau && yinBuf[t + 1] < yinBuf[t]) {
+            t++;
+          }
+          foundTau = t;
+          break;
         }
       }
 
-      let d = 0;
-      while (c[d] > c[d + 1]) d++;
-      let maxv = -1, maxpos = -1;
-      for (let i = d; i < s.length; i++) {
-        if (c[i] > maxv) { maxv = c[i]; maxpos = i; }
+      if (foundTau === -1) {
+        let bestVal = 0.35;
+        for (let t = Math.max(2, minTau); t <= maxTau; t++) {
+          if (yinBuf[t] < bestVal) {
+            bestVal = yinBuf[t];
+            foundTau = t;
+          }
+        }
       }
-      return rate / maxpos;
+
+      if (foundTau === -1) return -1;
+
+      // Sub-sample Parabolic Interpolation
+      let refinedTau = foundTau;
+      if (foundTau > 0 && foundTau < halfBuf - 1) {
+        const s0 = yinBuf[foundTau - 1];
+        const s1 = yinBuf[foundTau];
+        const s2 = yinBuf[foundTau + 1];
+        const denom = 2 * (s0 - 2 * s1 + s2);
+        if (denom !== 0) {
+          refinedTau = foundTau + (s0 - s2) / denom;
+        }
+      }
+
+      return sampleRate / refinedTau;
     }
 
     function runTuner() {
       if (!tunerActive) return;
+
       analyser.getFloatTimeDomainData(tunerBuf);
-      const freq = autoCorrelate(tunerBuf, audioCtx.sampleRate);
+      const minF = currentInstrument === 'bass' ? 28 : 65;
+      const maxF = 2200;
+      const freq = detectPitchYIN(tunerBuf, audioCtx.sampleRate, minF, maxF);
 
       const noteEl = document.getElementById('noteDisplay');
       const flat = document.getElementById('flatChevron');
@@ -1349,21 +1950,44 @@
       const needle = document.getElementById('centsNeedle');
       const hz = document.getElementById('hzReadout');
 
-      if (freq > 60 && freq < 2200) {
+      const instNoteEl = document.getElementById('instNoteDisplay');
+      const instOctaveEl = document.getElementById('instOctaveDisplay');
+      const instFlat = document.getElementById('instFlatChevron');
+      const instSharp = document.getElementById('instSharpChevron');
+      const instNeedle = document.getElementById('instCentsNeedle');
+      const instHz = document.getElementById('instHzReadout');
+
+      const tuningObj = INSTRUMENTS_DATA[currentInstrument].tunings[currentTuning];
+      const targetStrings = tuningObj.strings;
+
+      if (freq > minF && freq < maxF) {
         const noteNum = 12 * (Math.log(freq / 440) / Math.log(2)) + 69;
         const rounded = Math.round(noteNum);
-        const cents = Math.floor((noteNum - rounded) * 100);
+        const rawCents = (noteNum - rounded) * 100;
 
-        noteEl.textContent = noteStrings[rounded % 12];
-        hz.textContent = `${Math.round(freq)} Hz · ${cents > 0 ? '+' : ''}${cents} C`;
-        needle.style.left = `${Math.min(95, Math.max(5, 50 + cents))}%`;
+        smoothedCents = (smoothedCents * 0.6) + (rawCents * 0.4);
+        const dispCents = Math.round(smoothedCents);
 
-        if (Math.abs(cents) <= 3) {
+        const noteIndex = ((rounded % 12) + 12) % 12;
+        const noteName = noteStrings[noteIndex];
+        const octave = Math.floor(rounded / 12) - 1;
+
+        // ±5 cents practice tolerance
+        const inTune = Math.abs(dispCents) <= 5;
+        const isFlat = dispCents < -5;
+        const isSharp = dispCents > 5;
+
+        // 1. Update Chromatic Elements
+        noteEl.textContent = noteName;
+        hz.textContent = `${Math.round(freq)} Hz · ${dispCents > 0 ? '+' : ''}${dispCents} C`;
+        needle.style.left = `${Math.min(95, Math.max(5, 50 + smoothedCents))}%`;
+
+        if (inTune) {
           noteEl.className = 'tuner-note in-tune';
           needle.className = 'cents-needle in-tune';
           flat.className = 'tuner-chevron';
           sharp.className = 'tuner-chevron';
-        } else if (cents < -3) {
+        } else if (isFlat) {
           noteEl.className = 'tuner-note';
           needle.className = 'cents-needle';
           flat.className = 'tuner-chevron lit';
@@ -1374,9 +1998,70 @@
           flat.className = 'tuner-chevron';
           sharp.className = 'tuner-chevron lit';
         }
+
+        // 2. Update Instrument Elements
+        instNoteEl.textContent = noteName;
+        instOctaveEl.textContent = octave;
+        instHz.textContent = `${freq.toFixed(1)} Hz · ${dispCents > 0 ? '+' : ''}${dispCents} C`;
+        instNeedle.style.left = `${Math.min(95, Math.max(5, 50 + smoothedCents))}%`;
+
+        if (inTune) {
+          instNoteEl.className = 'tuner-note in-tune';
+          instNeedle.className = 'cents-needle in-tune';
+          instFlat.className = 'tuner-chevron';
+          instSharp.className = 'tuner-chevron';
+        } else if (isFlat) {
+          instNoteEl.className = 'tuner-note';
+          instNeedle.className = 'cents-needle';
+          instFlat.className = 'tuner-chevron lit';
+          instSharp.className = 'tuner-chevron';
+        } else {
+          instNoteEl.className = 'tuner-note';
+          instNeedle.className = 'cents-needle';
+          instFlat.className = 'tuner-chevron';
+          instSharp.className = 'tuner-chevron lit';
+        }
+
+        // 3. Match Target String Pills
+        let closestIndex = -1;
+        let minSemiDiff = 999;
+        targetStrings.forEach((str, idx) => {
+          const semiDiff = Math.abs(12 * Math.log2(freq / str.freq));
+          if (semiDiff < minSemiDiff) {
+            minSemiDiff = semiDiff;
+            closestIndex = idx;
+          }
+        });
+
+        targetStrings.forEach((str, idx) => {
+          const pill = document.getElementById(`pill-str-${idx}`);
+          if (!pill) return;
+          if (idx === closestIndex && minSemiDiff < 1.3) {
+            pill.classList.add('detected');
+            if (inTune) {
+              pill.classList.add('in-tune');
+            } else {
+              pill.classList.remove('in-tune');
+            }
+          } else {
+            pill.classList.remove('detected', 'in-tune');
+          }
+        });
+
+      } else {
+        // Clear highlights on silence
+        targetStrings.forEach((str, idx) => {
+          const pill = document.getElementById(`pill-str-${idx}`);
+          if (pill) pill.classList.remove('detected', 'in-tune');
+        });
       }
+
       requestAnimationFrame(runTuner);
     }
+
+    // Initialize View & String Pills
+    renderStringPills();
+    setTunerView('chromatic');
   </script>
 </body>
 </html>
