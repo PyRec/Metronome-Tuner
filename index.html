@@ -1724,32 +1724,39 @@
       }, 4000);
     }
 
-        // Reference Drone Synthesis (Fixed Concurrency & Absolute Zero-Gain Stop)
+    // Reference Drone Synthesis (Acoustic Body Modelling)
     function stopDrone() {
       if (activeDrone) {
-        // Capture a local reference so subsequent clicks cannot overwrite it
+        // Capture a local reference so subsequent rapid clicks cannot overwrite it
         const dyingDrone = activeDrone;
         activeDrone = null;
 
         const ctx = getContext();
         try {
+          // Cancel any scheduled audio events and lock current volume
           dyingDrone.gain.gain.cancelScheduledValues(ctx.currentTime);
           dyingDrone.gain.gain.setValueAtTime(dyingDrone.gain.gain.value, ctx.currentTime);
-          // Ramp completely to 0.00001 (absolute silence) before cutting off
-          dyingDrone.gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.04);
+          
+          // Ramp completely to 0.00001 (absolute silence) to kill ghost hum
+          dyingDrone.gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.05);
+          
           // Hardware stop scheduled directly into the audio graph
-          dyingDrone.osc.stop(ctx.currentTime + 0.05);
+          dyingDrone.osc.stop(ctx.currentTime + 0.06);
+          
+          // Clean up and disconnect nodes from device memory after silence is achieved
           setTimeout(() => {
             try {
               dyingDrone.osc.disconnect();
+              dyingDrone.filter.disconnect();
               dyingDrone.gain.disconnect();
             } catch(e) {}
-          }, 60);
+          }, 70);
         } catch(e) {
           try { dyingDrone.osc.stop(); } catch(err) {}
         }
       }
 
+      // Reset the visual state of the playing note pill
       if (activeDronePill) {
         activeDronePill.classList.remove('drone-playing');
         const icon = activeDronePill.querySelector('.sound-icon');
@@ -1759,27 +1766,58 @@
     }
 
     function startDrone(freq, pillEl) {
+      // Always kill any previously running sound first
       stopDrone();
 
       const ctx = getContext();
       const osc = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
       const gain = ctx.createGain();
 
-      osc.type = 'sine';
+      // Shape the waveform and filter based on acoustic instrument physics
+      if (currentInstrument === 'violin' || currentInstrument === 'viola') {
+        // Sawtooth wave replicates bowed string overtones; lowpass filter mimics wooden body resonance
+        osc.type = 'sawtooth';
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(1600, ctx.currentTime);
+        filter.Q.setValueAtTime(1.8, ctx.currentTime);
+      } else if (currentInstrument === 'cello') {
+        // Deeper lowpass cutoff to give cello a warmer chest resonance
+        osc.type = 'sawtooth';
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(900, ctx.currentTime);
+        filter.Q.setValueAtTime(1.5, ctx.currentTime);
+      } else if (currentInstrument === 'bass') {
+        // Triangle wave with low cutoff gives clean bass punch without tablet speaker distortion
+        osc.type = 'triangle';
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(380, ctx.currentTime);
+        filter.Q.setValueAtTime(2.0, ctx.currentTime);
+      } else {
+        // Guitar / Ukulele: mellow plucked nylon/bronze string character
+        osc.type = 'triangle';
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(1400, ctx.currentTime);
+        filter.Q.setValueAtTime(1.2, ctx.currentTime);
+      }
+
       osc.frequency.setValueAtTime(freq, ctx.currentTime);
 
-      // Start at pure zero and ramp smoothly to audible volume
+      // Smooth attack envelope so the tone starts gently without an electric "click"
       gain.gain.setValueAtTime(0.00001, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.35, ctx.currentTime + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.28, ctx.currentTime + 0.06);
 
-      osc.connect(gain);
+      // Connect the chain: Oscillator -> Acoustic Resonant Filter -> Volume Gain -> Speakers
+      osc.connect(filter);
+      filter.connect(gain);
       gain.connect(ctx.destination);
       osc.start();
 
-      activeDrone = { osc, gain, freq };
+      activeDrone = { osc, filter, gain, freq };
       activeDronePill = pillEl;
       pillEl.classList.add('drone-playing');
 
+      // Add the visual note icon (♪) to the active pill
       const icon = document.createElement('span');
       icon.className = 'sound-icon';
       icon.style.marginLeft = '4px';
@@ -1787,10 +1825,12 @@
       icon.textContent = '♪';
       pillEl.appendChild(icon);
 
+      // If mic is running at the same time, warn them about speaker-to-mic bleed
       if (tunerActive) {
         showHeadphoneTip();
       }
     }
+
 
     // Dynamic String Pills Generator
     function renderStringPills() {
